@@ -139,6 +139,24 @@
     <string name="update">Update</string>
     <string name="update_available">Update available</string>
     <string name="uninstall">Uninstall</string>
+
+    <!-- App Updates screen -->
+    <string name="app_updates">App Updates</string>
+    <string name="available_updates">Available updates (%1$d)</string>
+    <string name="update_all">Update all</string>
+    <string name="checking_for_updates">Checking for updates…</string>
+    <string name="no_updates_available">You\'re all up to date</string>
+    <string name="no_updates_available_hint">Apps installed via RepoStore with available updates will appear here</string>
+    <string name="updates_check_failed">Couldn\'t check for updates</string>
+    <string name="updating_app">Updating %1$s…</string>
+
+    <!-- Update notifications -->
+    <string name="update_notification_channel_name">App Updates</string>
+    <string name="update_notification_channel_desc">Notifies when updates are available for your installed apps</string>
+    <string name="update_notification_title">Update available: %1$s</string>
+    <string name="update_notification_text">%1$s → %2$s. Tap to update.</string>
+    <string name="update_notification_summary_title">Updates available</string>
+    <string name="update_notification_summary_text">%1$d app updates available</string>
     
     <!-- GitHub Sign In -->
     <string name="github_sign_in">Sign in with GitHub</string>

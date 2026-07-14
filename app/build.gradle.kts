@@ -20,8 +20,8 @@ android {
         applicationId = "com.samyak.repostore"
         minSdk = 26
         targetSdk = 36
-        versionCode = 19
-        versionName = "1.0.18"
+        versionCode = 20
+        versionName = "1.0.19"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -116,6 +116,9 @@ dependencies {
     
     // Lottie - Animations
     implementation(libs.lottie)
+
+    // WorkManager - background update checks
+    implementation(libs.work.runtime.ktx)
     
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

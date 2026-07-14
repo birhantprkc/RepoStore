@@ -622,6 +622,25 @@ class AppInstaller private constructor(private val context: Context) {
     }
 
     /**
+     * Get the user-visible application label for a package.
+     * @return The app's display name, or null if not installed.
+     */
+    fun getAppLabel(packageName: String): String? {
+        return try {
+            val pm = context.packageManager
+            val appInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                pm.getApplicationInfo(packageName, PackageManager.ApplicationInfoFlags.of(0))
+            } else {
+                @Suppress("DEPRECATION")
+                pm.getApplicationInfo(packageName, 0)
+            }
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
+    }
+
+    /**
      * Launch app by package name
      */
     fun launch(packageName: String): Boolean {

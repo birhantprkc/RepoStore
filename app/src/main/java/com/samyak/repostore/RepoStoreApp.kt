@@ -1,13 +1,24 @@
 package com.samyak.repostore
 
 import android.app.Application
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.samyak.repostore.data.api.RetrofitClient
 import com.samyak.repostore.data.auth.GitHubAuth
 import com.samyak.repostore.data.auth.SecureTokenStorage
 import com.samyak.repostore.data.db.AppDatabase
 import com.samyak.repostore.data.repository.GitHubRepository
+import com.samyak.repostore.worker.UpdateCheckWorker
+import java.util.concurrent.TimeUnit
 
 class RepoStoreApp : Application() {
+
+    companion object {
+        private const val UPDATE_CHECK_WORK = "periodic_update_check"
+    }
 
     val database by lazy { AppDatabase.getDatabase(this) }
     val repository by lazy { GitHubRepository(database.repoDao()) }
@@ -23,6 +34,29 @@ class RepoStoreApp : Application() {
         // Initialize RetrofitClient with cache
         // OAuth token from GitHubAuth takes priority in RetrofitClient
         RetrofitClient.init(this, null)
+
+        // Schedule periodic background checks for app updates
+        scheduleUpdateChecks()
+    }
+
+    /**
+     * Schedule a periodic background job that checks installed apps for
+     * available updates and posts a notification for each one.
+     */
+    private fun scheduleUpdateChecks() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val request = PeriodicWorkRequestBuilder<UpdateCheckWorker>(6, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            UPDATE_CHECK_WORK,
+            ExistingPeriodicWorkPolicy.KEEP,
+            request
+        )
     }
 
     /**

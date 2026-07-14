@@ -18,6 +18,7 @@ import com.samyak.repostore.data.prefs.ThemePreferences
 import com.samyak.repostore.databinding.FragmentSettingsBinding
 import com.samyak.repostore.ui.activity.AboutActivity
 import com.samyak.repostore.ui.activity.AppDeveloperActivity
+import com.samyak.repostore.ui.activity.AppUpdatesActivity
 import com.samyak.repostore.ui.activity.DonateActivity
 import com.samyak.repostore.ui.activity.GitHubSignInActivity
 import com.samyak.repostore.ui.activity.LicensesActivity
@@ -47,6 +48,7 @@ class SettingsFragment : Fragment() {
         setupLanguageSection()
         setupAppearanceSection()
         setupMyAppsSection()
+        setupAppUpdatesSection()
         setupDownloadSettingsSection()
         setupAboutSection()
         setupDeveloperSection()
@@ -199,6 +201,12 @@ class SettingsFragment : Fragment() {
     private fun setupMyAppsSection() {
         binding.myAppsCard.setOnClickListener {
             startActivity(Intent(requireContext(), FavoriteActivity::class.java))
+        }
+    }
+
+    private fun setupAppUpdatesSection() {
+        binding.appUpdatesCard.setOnClickListener {
+            startActivity(Intent(requireContext(), AppUpdatesActivity::class.java))
         }
     }
 

@@ -1,0 +1,4 @@
+- Added JSON import/export for favorite apps
+- Added Telegram community link in Settings
+- Fixed icon colors for dark theme in Favorite Apps
+- UI improvements and bug fixes

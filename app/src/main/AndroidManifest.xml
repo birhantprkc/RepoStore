@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!-- Required for posting update-available notifications on Android 13+ -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Required for Android 11+ to query installed packages -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -98,6 +100,11 @@
             android:name=".ui.activity.DownloadSettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activity.SettingsActivity" />
+
+        <activity
+            android:name=".ui.activity.AppUpdatesActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
 
         <activity
             android:name=".ui.activity.ScreenshotViewerActivity"
