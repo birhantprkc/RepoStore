@@ -25,7 +25,7 @@
         android:theme="@style/Theme.RepoStore"
         android:usesCleartextTraffic="false"
         tools:targetApi="36">
-        
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".ui.activity.AppListActivity"
             android:exported="false"
@@ -45,7 +45,7 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
-        
+
         <activity
             android:name=".ui.activity.DetailActivity"
             android:exported="false"
@@ -127,7 +127,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-            
+
     </application>
 
 </manifest>

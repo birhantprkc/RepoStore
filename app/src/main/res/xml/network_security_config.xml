@@ -18,4 +18,12 @@
             <certificates src="system" />
         </trust-anchors>
     </domain-config>
+
+    <!-- VirusTotal API for APK security verification -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">virustotal.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
 </network-security-config>
