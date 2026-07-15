@@ -22,6 +22,7 @@ class GitHubRepository(private val repoDao: RepoDao) {
 
     // In-memory cache
     private val releaseCache = mutableMapOf<String, GitHubRelease?>()
+    private val totalDownloadsCache = mutableMapOf<String, Long>()
     private val screenshotCache = mutableMapOf<String, List<String>>()
     private val developerReposCache = mutableMapOf<String, Pair<Long, List<AppItem>>>()
     private val apkReposCache = mutableMapOf<String, Boolean>() // Cache for repos with APK
@@ -451,6 +452,40 @@ class GitHubRepository(private val repoDao: RepoDao) {
         try {
             val releases = api.getReleases(owner, repoName, perPage = 5)
             Result.success(releases)
+        } catch (e: HttpException) {
+            handleHttpException(e)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Total number of APK/asset downloads across ALL releases (all versions) of a repo.
+     * Walks every page of the releases API and sums each release asset's download count.
+     */
+    suspend fun getTotalDownloads(owner: String, repoName: String): Result<Long> = withContext(Dispatchers.IO) {
+        try {
+            val cacheKey = "$owner/$repoName"
+            totalDownloadsCache[cacheKey]?.let {
+                return@withContext Result.success(it)
+            }
+
+            var total = 0L
+            var page = 1
+            val perPage = 100
+            // Safety cap: 20 pages = up to 2000 releases, plenty for any real repo.
+            while (page <= 20) {
+                val releases = api.getReleases(owner, repoName, perPage = perPage, page = page)
+                if (releases.isEmpty()) break
+                total += releases.sumOf { release ->
+                    release.assets.sumOf { it.downloadCount.coerceAtLeast(0).toLong() }
+                }
+                if (releases.size < perPage) break
+                page++
+            }
+
+            totalDownloadsCache[cacheKey] = total
+            Result.success(total)
         } catch (e: HttpException) {
             handleHttpException(e)
         } catch (e: Exception) {

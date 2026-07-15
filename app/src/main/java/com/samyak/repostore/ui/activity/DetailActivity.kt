@@ -53,6 +53,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.samyak.gitcore.util.IconResolver
+import com.samyak.gitcore.util.DownloadCounter
 import com.samyak.repostore.util.loadIconWithFallback
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -80,6 +81,7 @@ class DetailActivity : AppCompatActivity() {
     private var currentRepo: GitHubRepo? = null
     private var currentReleaseTag: String? = null
     private var setupButtonJob: kotlinx.coroutines.Job? = null
+    private var downloadsJob: kotlinx.coroutines.Job? = null
     
     // Shimmer layout for skeleton loading
     private var shimmerLayout: ShimmerFrameLayout? = null
@@ -346,6 +348,12 @@ class DetailActivity : AppCompatActivity() {
             // Stats
             tvStars.text = formatNumber(repo.stars)
             tvForks.text = formatNumber(repo.forks)
+            // Total app downloads — show the latest release's count instantly,
+            // then load the full total across ALL releases (all versions) in the background.
+            tvDownloads.text = DownloadCounter.totalFormatted(
+                release?.assets?.map { it.downloadCount } ?: emptyList()
+            )
+            loadTotalDownloads(repo.owner.login, repo.name)
             tvLanguage.text = repo.language ?: "Code"
             tvUpdated.text = formatDate(repo.updatedAt)
 
@@ -464,6 +472,23 @@ class DetailActivity : AppCompatActivity() {
             // GitHub button
             btnGithub.setOnClickListener {
                 openUrl(repo.htmlUrl)
+            }
+        }
+    }
+
+    /**
+     * Load the total download count summed across ALL releases (all versions)
+     * and update the Downloads stat. Falls back silently to the latest-release
+     * count already shown if the full fetch fails.
+     */
+    private fun loadTotalDownloads(ownerLogin: String, repo: String) {
+        downloadsJob?.cancel()
+        downloadsJob = lifecycleScope.launch {
+            val repository = (application as RepoStoreApp).repository
+            val result = repository.getTotalDownloads(ownerLogin, repo)
+            if (!isActive) return@launch
+            result.getOrNull()?.let { total ->
+                binding.tvDownloads.text = DownloadCounter.format(total)
             }
         }
     }
