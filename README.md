@@ -29,11 +29,18 @@
 
 ---
 
-### All screenshots can be found in [screenshots/](screenshots/) folder.
+### All screenshots can be found in [screenshots/](screenshots/) folder. 
+<p align="right">
+<a href="https://t.me/+q2rca77Sx9phYTE1">
+    <img src="https://github.com/user-attachments/assets/e78b0c09-73ab-467b-b77d-30bf2a0bf754" alt="Get it on F-Droid" height="80">
+  </a>
+</p>
 
-<img src="screenshots/preview.gif" align="right" width="320"/>
+<img src="screenshots/preview.gif" align="right" width="320"/> 
 
-## ✨ What is RepoStore?
+## ✨ What is RepoStore?       
+
+
 
 RepoStore is a native Android app that turns GitHub releases into a clean, Play Store style experience:
 
