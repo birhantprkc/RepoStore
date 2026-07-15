@@ -4,6 +4,10 @@
 
 <h1 align="center">RepoStore</h1>
 
+<div align="center">
+  <a href="https://trendshift.io/repositories/20823?utm_source=repository-badge&utm_medium=badge&utm_campaign=badge-repository-20823" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/20823" alt="samyak2403%2FRepoStore | Trendshift" width="250" height="55"/></a>
+</div>
+
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
   <a href="https://kotlinlang.org"><img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-1.9-7F52FF.svg?logo=kotlin&logoColor=white"/></a>
