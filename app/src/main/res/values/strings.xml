@@ -78,6 +78,30 @@
     <string name="no_release_notes">No release notes</string>
     <string name="archived">Archived</string>
 
+    <!-- Security badge (VirusTotal) -->
+    <string name="security_checking">Checking security…</string>
+    <string name="security_verified">Verified safe</string>
+    <string name="security_verified_detail">Verified safe · %1$d engines</string>
+    <string name="security_flagged">Security warning</string>
+    <string name="security_flagged_detail">%1$d/%2$d engines flagged this file</string>
+    <string name="security_integrity">Checksum verified</string>
+    <string name="security_source">GitHub release</string>
+    <string name="security_unknown">GitHub release</string>
+    <string name="security_powered_by">Security status powered by VirusTotal</string>
+    <string name="security_info_scan">Scanned by VirusTotal — no threats detected.</string>
+    <string name="security_info_integrity">Integrity verifiable via the SHA-256 checksum published on GitHub.</string>
+    <string name="security_info_source">Installed directly from the developer\'s official GitHub release.</string>
+    <string name="security_label">Security</string>
+    <string name="security_stat_checking">…</string>
+    <string name="security_stat_safe">Safe</string>
+    <string name="security_stat_verified">Verified</string>
+    <string name="security_stat_warning">Warning</string>
+    <string name="security_stat_source">GitHub</string>
+
+    <!-- Install unknown apps permission -->
+    <string name="install_permission_prompt">Allow this app to install apps, then come back to continue.</string>
+    <string name="install_permission_required">Permission needed to install apps. Enable it in settings and try again.</string>
+
     <!-- Tags -->
     <string name="tag_new">NEW</string>
     <string name="tag_updated">UPDATED</string>

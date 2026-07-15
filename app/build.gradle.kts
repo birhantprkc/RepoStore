@@ -12,6 +12,11 @@ val localProps = Properties().apply {
 }
 val localGithubClientId = (localProps.getProperty("GITHUB_CLIENT_ID") ?: "Ov23liinOZYK0IduPvuO").trim()
 
+// VirusTotal API key used to verify APK security status on the detail screen.
+// To use your own: add VIRUSTOTAL_API_KEY=your_key to local.properties.
+// Get a free key at: https://www.virustotal.com/gui/my-apikey
+val virusTotalApiKey = (localProps.getProperty("VIRUSTOTAL_API_KEY") ?: "").trim()
+
 android {
     namespace = "com.samyak.repostore"
     compileSdk = 36
@@ -29,6 +34,9 @@ android {
         // To use your own: Add GITHUB_CLIENT_ID=your_client_id to local.properties
         // Get your own at: https://github.com/settings/developers -> "New OAuth App"
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"${localGithubClientId}\"")
+
+        // VirusTotal API key for APK security verification badge
+        buildConfigField("String", "VIRUSTOTAL_API_KEY", "\"${virusTotalApiKey}\"")
     }
 
     buildTypes {

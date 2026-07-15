@@ -38,6 +38,10 @@ import com.samyak.repostore.ui.viewmodel.DetailViewModel
 import com.samyak.repostore.ui.viewmodel.DetailViewModelFactory
 import com.samyak.repostore.util.AppInstaller
 import com.samyak.repostore.util.ApkArchitectureHelper
+import com.samyak.repostore.util.SecurityChecker
+import com.samyak.repostore.util.SecurityStatus
+import androidx.core.content.ContextCompat
+import android.content.res.ColorStateList
 import com.samyak.repostore.ui.widget.ShimmerFrameLayout
 import com.samyak.repostore.util.ApkSelectionResult
 import com.samyak.repostore.util.RateLimitDialog
@@ -82,6 +86,25 @@ class DetailActivity : AppCompatActivity() {
     private var currentReleaseTag: String? = null
     private var setupButtonJob: kotlinx.coroutines.Job? = null
     private var downloadsJob: kotlinx.coroutines.Job? = null
+    private var securityJob: kotlinx.coroutines.Job? = null
+
+    // Asset waiting to be downloaded once the user grants "install unknown apps".
+    private var pendingInstallAsset: ReleaseAsset? = null
+
+    // Launches the system "Install unknown apps" settings screen and resumes the
+    // pending download once the user returns (if permission was granted).
+    private val unknownSourcesLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()) {
+            val asset = pendingInstallAsset
+            pendingInstallAsset = null
+            if (asset != null && canInstallPackages()) {
+                startDownload(asset)
+            } else if (asset != null) {
+                Toast.makeText(this, R.string.install_permission_required, Toast.LENGTH_LONG).show()
+                setDownloadButtonState(getString(R.string.install), true, formatAssetSubtitle(currentApkAsset))
+                binding.btnDownloadDropdown.isEnabled = true
+            }
+        }
     
     // Shimmer layout for skeleton loading
     private var shimmerLayout: ShimmerFrameLayout? = null
@@ -474,6 +497,109 @@ class DetailActivity : AppCompatActivity() {
                 openUrl(repo.htmlUrl)
             }
         }
+
+        // Verify APK security via VirusTotal and show the badge
+        checkAppSecurity()
+    }
+
+    /**
+     * Look up the selected APK asset's security report on VirusTotal and update the
+     * security badge. Runs off the main thread and never blocks the UI.
+     */
+    private fun checkAppSecurity() {
+        securityJob?.cancel()
+
+        val asset = currentApkAsset
+        if (asset == null) {
+            binding.layoutSecurityStat.visibility = View.GONE
+            return
+        }
+        binding.layoutSecurityStat.visibility = View.VISIBLE
+
+        // Show a "checking" state immediately.
+        updateSecurityBadge(SecurityStatus.Checking)
+
+        securityJob = lifecycleScope.launch {
+            val status = SecurityChecker.check(asset)
+            if (!isActive) return@launch
+            updateSecurityBadge(status)
+        }
+    }
+
+    private fun updateSecurityBadge(status: SecurityStatus) {
+        val icon = binding.ivSecurityStat
+        val text = binding.tvSecurityStat
+
+        fun style(textColorRes: Int, iconRes: Int, label: String) {
+            binding.layoutSecurityStat.visibility = View.VISIBLE
+            val color = ContextCompat.getColor(this, textColorRes)
+            text.text = label
+            text.setTextColor(color)
+            icon.setImageResource(iconRes)
+            icon.imageTintList = ColorStateList.valueOf(color)
+        }
+
+        // Explanation shown when the stat is tapped, honest for each tier.
+        val infoRes: Int
+
+        when (status) {
+            is SecurityStatus.Checking -> {
+                style(
+                    R.color.badge_unknown_text,
+                    R.drawable.ic_cat_security, getString(R.string.security_stat_checking)
+                )
+                infoRes = R.string.security_powered_by
+            }
+            is SecurityStatus.Safe -> {
+                style(
+                    R.color.badge_safe_text,
+                    R.drawable.ic_verified_shield, getString(R.string.security_stat_safe)
+                )
+                infoRes = R.string.security_info_scan
+            }
+            is SecurityStatus.Flagged -> {
+                style(
+                    R.color.badge_flagged_text,
+                    R.drawable.ic_warning, getString(R.string.security_stat_warning)
+                )
+                infoRes = R.string.security_powered_by
+            }
+            is SecurityStatus.Verified -> {
+                // GitHub-published checksum available: integrity verifiable for all users.
+                style(
+                    R.color.badge_safe_text,
+                    R.drawable.ic_verified_shield, getString(R.string.security_stat_verified)
+                )
+                infoRes = R.string.security_info_integrity
+            }
+            is SecurityStatus.Unknown -> {
+                // Baseline signal shown to every user: it is an official GitHub release.
+                style(
+                    R.color.badge_unknown_text,
+                    R.drawable.ic_cat_security, getString(R.string.security_stat_source)
+                )
+                infoRes = R.string.security_info_source
+            }
+        }
+
+        // For a flagged/safe scan, include the engine counts in the tap message.
+        val message: String = when (status) {
+            is SecurityStatus.Safe ->
+                if (status.totalEngines > 0)
+                    getString(R.string.security_verified_detail, status.totalEngines)
+                else getString(infoRes)
+            is SecurityStatus.Flagged ->
+                getString(
+                    R.string.security_flagged_detail,
+                    status.malicious + status.suspicious,
+                    status.totalEngines
+                )
+            else -> getString(infoRes)
+        }
+
+        binding.layoutSecurityStat.setOnClickListener {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        }
     }
 
     /**
@@ -573,7 +699,52 @@ class DetailActivity : AppCompatActivity() {
         return "$archStr • $sizeMb"
     }
 
+    /**
+     * True when this app is allowed to install APKs. On Android 8.0+ the user must
+     * grant "Install unknown apps" for this app or every install intent is blocked.
+     */
+    private fun canInstallPackages(): Boolean {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            packageManager.canRequestPackageInstalls()
+        } else {
+            true
+        }
+    }
+
+    /**
+     * Send the user to the system screen where they can allow this app to install APKs,
+     * then resume [asset]'s download when they come back.
+     */
+    private fun requestInstallPermission(asset: ReleaseAsset) {
+        pendingInstallAsset = asset
+        Toast.makeText(this, R.string.install_permission_prompt, Toast.LENGTH_LONG).show()
+        try {
+            val intent = Intent(
+                android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                Uri.parse("package:$packageName")
+            )
+            unknownSourcesLauncher.launch(intent)
+        } catch (e: Exception) {
+            // Some OEMs don't support the per-app screen; fall back to the global one.
+            try {
+                unknownSourcesLauncher.launch(Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES))
+            } catch (e2: Exception) {
+                pendingInstallAsset = null
+                Toast.makeText(this, R.string.install_permission_required, Toast.LENGTH_LONG).show()
+                setDownloadButtonState(getString(R.string.install), true, formatAssetSubtitle(currentApkAsset))
+                binding.btnDownloadDropdown.isEnabled = true
+            }
+        }
+    }
+
     private fun startDownload(asset: ReleaseAsset) {
+        // On Android 8.0+ the install will be silently blocked unless the user has
+        // allowed this app to install unknown apps. Gate the download on that.
+        if (!canInstallPackages()) {
+            requestInstallPermission(asset)
+            return
+        }
+
         // Disable button immediately
         setDownloadButtonState("0%", false, formatAssetSubtitle(asset))
         binding.btnDownloadDropdown.isEnabled = false

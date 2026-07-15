@@ -53,8 +53,15 @@ data class ReleaseAsset(
     val size: Long,
     @SerializedName("download_count") val downloadCount: Int,
     @SerializedName("browser_download_url") val downloadUrl: String,
-    @SerializedName("content_type") val contentType: String
-)
+    @SerializedName("content_type") val contentType: String,
+    // GitHub provides the asset checksum as "sha256:<hex>" (available on newer releases).
+    // Used to look up the file's security report on VirusTotal without downloading it.
+    val digest: String? = null
+) {
+    /** The raw SHA-256 hex hash without the "sha256:" prefix, or null if unavailable. */
+    val sha256: String?
+        get() = digest?.substringAfter("sha256:", "")?.takeIf { it.isNotBlank() }
+}
 
 data class ReadmeResponse(
     val content: String,
