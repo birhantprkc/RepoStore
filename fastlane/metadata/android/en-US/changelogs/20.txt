@@ -1,0 +1,5 @@
+- Added APK Security Verification badge powered by VirusTotal
+- Hash-based security lookup (Safe/Verified/GitHub/Warning tiers)
+- Fixed installs blocked on Android 8+ with permission prompt
+- Fixed stat labels breaking across two lines
+- Improved Russian localization

@@ -25,8 +25,8 @@ android {
         applicationId = "com.samyak.repostore"
         minSdk = 26
         targetSdk = 36
-        versionCode = 20
-        versionName = "1.0.19"
+        versionCode = 21
+        versionName = "1.0.20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -58,6 +58,14 @@ android {
         buildConfig = true
     }
     
+    // Exclude non-deterministic baseline profile files for F-Droid reproducible builds
+    packaging {
+        resources {
+            excludes += "assets/dexopt/baseline.prof"
+            excludes += "assets/dexopt/baseline.profm"
+        }
+    }
+
     // Disables dependency metadata when building APKs (for IzzyOnDroid/F-Droid)
     dependenciesInfo {
         includeInApk = false

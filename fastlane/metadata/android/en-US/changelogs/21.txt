@@ -1,0 +1,2 @@
+- Fixed F-Droid reproducible build by excluding non-deterministic baseline profiles
+- All features from v1.0.19: APK Security Verification, install permission fix, Russian localization
