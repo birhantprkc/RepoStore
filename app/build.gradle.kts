@@ -29,13 +29,16 @@ android {
         versionName = "1.0.20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
         // GitHub OAuth Client ID
         // To use your own: Add GITHUB_CLIENT_ID=your_client_id to local.properties
         // Get your own at: https://github.com/settings/developers -> "New OAuth App"
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"${localGithubClientId}\"")
 
-        // VirusTotal API key for APK security verification badge
+        // VirusTotal API key for APK security verification badge.
+        // Default (debug/local) uses the value from local.properties. Release builds
+        // override this to an empty string below so F-Droid reproducible builds match
+        // the published APK (F-Droid builds without local.properties).
         buildConfigField("String", "VIRUSTOTAL_API_KEY", "\"${virusTotalApiKey}\"")
     }
 
@@ -47,6 +50,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Reproducible builds: never embed local secrets in the published APK.
+            // F-Droid builds with no local.properties, so the release must too.
+            buildConfigField("String", "VIRUSTOTAL_API_KEY", "\"\"")
         }
     }
     compileOptions {
@@ -57,8 +63,9 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    
-    // Exclude non-deterministic baseline profile files for F-Droid reproducible builds
+
+    // Exclude non-deterministic baseline profile files so F-Droid reproducible
+    // builds match the published APK.
     packaging {
         resources {
             excludes += "assets/dexopt/baseline.prof"
@@ -86,36 +93,36 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    
+
     // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
-    
+
     // Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
-    
+
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.runtime)
-    
+
     // Image loading
     implementation(libs.glide)
-    
+
     // Fragment
     implementation(libs.fragment.ktx)
-    
+
     // SwipeRefresh
     implementation(libs.swiperefresh)
-    
+
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
-    
+
     // Markwon - Markdown rendering
     implementation(libs.markwon.core)
     implementation(libs.markwon.image)
@@ -123,19 +130,19 @@ dependencies {
     implementation(libs.markwon.tables)
     implementation(libs.markwon.strikethrough)
     implementation(libs.markwon.html)
-    
+
     // PhotoView - Zoomable image viewer
     implementation(libs.photoview)
-    
+
     // DotsIndicator - ViewPager2 page indicators
     implementation(libs.dotsindicator)
-    
+
     // Lottie - Animations
     implementation(libs.lottie)
 
     // WorkManager - background update checks
     implementation(libs.work.runtime.ktx)
-    
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
