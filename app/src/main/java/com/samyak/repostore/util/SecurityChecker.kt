@@ -2,6 +2,7 @@ package com.samyak.repostore.util
 
 import android.util.Log
 import com.samyak.repostore.data.api.VirusTotalClient
+import com.samyak.repostore.data.api.VirusTotalKeyManager
 import com.samyak.repostore.data.model.ReleaseAsset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -54,28 +55,43 @@ object SecurityChecker {
 
         val hash = asset.sha256
 
-        // 1. Best assurance: a real antivirus scan via VirusTotal. Only possible when an
-        //    API key is configured and GitHub published a checksum for the asset.
-        if (VirusTotalClient.isConfigured && !hash.isNullOrBlank()) {
-            try {
-                val response = VirusTotalClient.api.getFileReport(hash)
-                val stats = response.data?.attributes?.lastAnalysisStats
-                if (stats != null) {
-                    val malicious = stats.malicious
-                    val suspicious = stats.suspicious
-                    return@withContext if (malicious > 0 || suspicious > 0) {
-                        SecurityStatus.Flagged(malicious, suspicious, stats.totalEngines)
-                    } else {
-                        SecurityStatus.Safe(stats.totalEngines)
+        // 1. Best assurance: a real antivirus scan via VirusTotal. Only possible when a
+        //    key is available and GitHub published a checksum for the asset.
+        if (!hash.isNullOrBlank()) {
+            // Load the rotating pool of keys from the remote config (no-op if already loaded).
+            VirusTotalKeyManager.ensureLoaded()
+
+            if (VirusTotalClient.isConfigured) {
+                // Retry across the key pool: if one key is quota-limited (429) or rejected
+                // (401), rotate to the next enabled key and try again.
+                while (true) {
+                    try {
+                        val response = VirusTotalClient.api.getFileReport(hash)
+                        val stats = response.data?.attributes?.lastAnalysisStats
+                        if (stats != null) {
+                            val malicious = stats.malicious
+                            val suspicious = stats.suspicious
+                            return@withContext if (malicious > 0 || suspicious > 0) {
+                                SecurityStatus.Flagged(malicious, suspicious, stats.totalEngines)
+                            } else {
+                                SecurityStatus.Safe(stats.totalEngines)
+                            }
+                        }
+                        // stats == null -> fall through to integrity/source signals below.
+                        break
+                    } catch (e: HttpException) {
+                        // 404 = file never submitted to VirusTotal; 401 = bad key; 429 = quota.
+                        Log.d(TAG, "VirusTotal lookup failed (${e.code()}) for $hash")
+                        val recoverable = e.code() == 429 || e.code() == 401
+                        if (recoverable && VirusTotalKeyManager.rotate()) {
+                            continue // try again with the next key
+                        }
+                        break
+                    } catch (e: Exception) {
+                        Log.d(TAG, "VirusTotal lookup error: ${e.message}")
+                        break
                     }
                 }
-                // stats == null -> fall through to integrity/source signals below.
-            } catch (e: HttpException) {
-                // 404 = file never submitted to VirusTotal; 401 = bad key; 429 = quota.
-                // Any of these just means we fall back to a lower-tier trust signal.
-                Log.d(TAG, "VirusTotal lookup failed (${e.code()}) for $hash")
-            } catch (e: Exception) {
-                Log.d(TAG, "VirusTotal lookup error: ${e.message}")
             }
         }
 
