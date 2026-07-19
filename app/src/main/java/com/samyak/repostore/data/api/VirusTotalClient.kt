@@ -17,9 +17,13 @@ object VirusTotalClient {
 
     private const val BASE_URL = "https://www.virustotal.com/"
 
-    /** True when an API key has been configured at build time. */
+    /**
+     * True when at least one key is available. Keys are loaded from the remote pool
+     * ([VirusTotalKeyManager]); a build-time [BuildConfig.VIRUSTOTAL_API_KEY] still works
+     * as a fallback for local/dev builds.
+     */
     val isConfigured: Boolean
-        get() = BuildConfig.VIRUSTOTAL_API_KEY.isNotBlank()
+        get() = VirusTotalKeyManager.hasKeys || BuildConfig.VIRUSTOTAL_API_KEY.isNotBlank()
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC
@@ -36,7 +40,11 @@ object VirusTotalClient {
                 // Only attach the key to VirusTotal requests.
                 val host = request.url.host.lowercase()
                 if (host == "virustotal.com" || host.endsWith(".virustotal.com")) {
-                    val key = BuildConfig.VIRUSTOTAL_API_KEY
+                    // Prefer a key from the rotating remote pool; fall back to the
+                    // build-time key for local/dev builds.
+                    val key = VirusTotalKeyManager.currentKey()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: BuildConfig.VIRUSTOTAL_API_KEY
                     if (key.isNotBlank()) {
                         builder.addHeader("x-apikey", key)
                     }

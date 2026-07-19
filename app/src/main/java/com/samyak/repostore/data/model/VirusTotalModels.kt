@@ -22,6 +22,26 @@ data class VtFileAttributes(
     @SerializedName("reputation") val reputation: Int? = null
 )
 
+/**
+ * Remote pool of VirusTotal API keys, served as JSON from a private config repo.
+ * Example: https://raw.githubusercontent.com/sammax21/security/main/api_keys.json
+ *
+ * Multiple keys let the app keep scanning after a single key hits its daily quota:
+ * [VirusTotalKeyManager] rotates to the next enabled key on an HTTP 429/401.
+ */
+data class VtKeysConfig(
+    val virustotal: List<VtApiKey> = emptyList()
+)
+
+data class VtApiKey(
+    val id: Int = 0,
+    val key: String? = null,
+    val enabled: Boolean = false,
+    @SerializedName("dailyQuota") val dailyQuota: Int = 0,
+    val remaining: Int = 0,
+    val used: Int = 0
+)
+
 data class VtAnalysisStats(
     val harmless: Int = 0,
     val malicious: Int = 0,

@@ -153,21 +153,106 @@ class AppDeveloperActivity : AppCompatActivity() {
                 textSize = 14f
                 setPadding(24, 0, 24, 0)
                 gravity = android.view.Gravity.CENTER
-                
+
                 // Fetch dynamic text and background color programmatically using Material variables
                 val typedValue = android.util.TypedValue()
                 context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurfaceVariant, typedValue, true)
                 setTextColor(typedValue.data)
-                
+
+                // Make the overflow label look and behave like a button.
+                val ripple = android.util.TypedValue()
+                context.theme.resolveAttribute(
+                    android.R.attr.selectableItemBackgroundBorderless, ripple, true
+                )
+                setBackgroundResource(ripple.resourceId)
+                isClickable = true
+                isFocusable = true
+
                 // Add fixed height
                 val heightPx = (40f * resources.displayMetrics.density).toInt()
                 layoutParams = android.widget.LinearLayout.LayoutParams(
                     android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
                     heightPx
                 )
+
+                setOnClickListener { showAllContributors(contributors) }
             }
             binding.containerContributors.addView(moreText)
         }
+    }
+
+    /** Shows every contributor in a scrollable bottom sheet, each opening their GitHub profile. */
+    private fun showAllContributors(contributors: List<GitHubUser>) {
+        val density = resources.displayMetrics.density
+        fun dp(value: Int) = (value * density).toInt()
+
+        fun themeColor(attr: Int): Int {
+            val tv = android.util.TypedValue()
+            theme.resolveAttribute(attr, tv, true)
+            return tv.data
+        }
+
+        val list = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(dp(16), dp(16), dp(16), dp(24))
+        }
+
+        list.addView(android.widget.TextView(this).apply {
+            text = getString(R.string.contributors)
+            textSize = 18f
+            setPadding(dp(8), dp(4), dp(8), dp(12))
+            setTextColor(themeColor(com.google.android.material.R.attr.colorOnSurface))
+        })
+
+        for (contributor in contributors) {
+            val row = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding(dp(8), dp(10), dp(8), dp(10))
+                isClickable = true
+                isFocusable = true
+                val ripple = android.util.TypedValue()
+                theme.resolveAttribute(android.R.attr.selectableItemBackground, ripple, true)
+                setBackgroundResource(ripple.resourceId)
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(contributor.htmlUrl)))
+                }
+            }
+
+            val avatar = com.google.android.material.imageview.ShapeableImageView(this).apply {
+                val size = dp(40)
+                layoutParams = android.widget.LinearLayout.LayoutParams(size, size)
+                scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                    .setAllCornerSizes(size / 2f)
+                    .build()
+            }
+            Glide.with(this)
+                .load(contributor.avatarUrl)
+                .placeholder(R.drawable.ic_app_placeholder)
+                .into(avatar)
+
+            val name = android.widget.TextView(this).apply {
+                text = contributor.name ?: contributor.login
+                textSize = 16f
+                setPadding(dp(16), 0, 0, 0)
+                setTextColor(themeColor(com.google.android.material.R.attr.colorOnSurface))
+            }
+
+            row.addView(avatar)
+            row.addView(name)
+            list.addView(row)
+        }
+
+        val scroll = androidx.core.widget.NestedScrollView(this).apply { addView(list) }
+
+        com.google.android.material.bottomsheet.BottomSheetDialog(this).apply {
+            setContentView(scroll)
+        }.show()
     }
 
     companion object {
