@@ -1,0 +1,379 @@
+<resources>
+    <string name="app_name">Repo Store</string>
+
+    <!-- Navigation -->
+    <string name="home">Головна</string>
+    <string name="games">Ігри</string>
+    <string name="apps">Програми</string>
+    <string name="trending">Популярні</string>
+    <string name="search">Пошук</string>
+    <string name="profile">Акаунт</string>
+    <string name="back">Назад</string>
+
+    <!-- Search -->
+    <string name="search_apps_games">Пошук програм та ігор</string>
+    <string name="search_github_repos">Пошук GitHub репозиторіїв…</string>
+    <string name="search_hint">Пошук Андроїд програм на GitHub</string>
+    <string name="no_results">Результат не знайдено</string>
+    <string name="clear">Очистити</string>
+    <string name="voice_search">Голосовий пошук</string>
+    <string name="filter">Фільтри</string>
+    <string name="sort_by">Сортувати за</string>
+    <string name="updated">Оновленні</string>
+    <string name="has_apk">Має APK</string>
+    <string name="reset">Скинути</string>
+    <string name="results_count">%d результатів</string>
+    <string name="any_language">Будь-яка мова</string>
+    <string name="any_stars">Будь-які зірки</string>
+    <string name="min_stars_format">%d+ зірок</string>
+    <string name="best_match">Найкраща відповідність</string>
+    <string name="most_stars">Найбільше зірок</string>
+    <string name="most_forks">Найбільше форків</string>
+    <string name="recently_updated_sort">Нещодавньо оновленні</string>
+    <string name="any_time">Будь-коли</string>
+    <string name="last_week">Протягом тижня</string>
+    <string name="last_month">Протягом місяца</string>
+    <string name="last_3_months">Протягом 3 місяців</string>
+    <string name="last_year">Протягом року</string>
+
+    <!-- Home Sections -->
+    <string name="recommended_for_you">Рекомендовані</string>
+    <string name="top_free_apps">Топ безкоштовних</string>
+    <string name="recently_updated">Нещодавньо оновленні</string>
+    <string name="see_more">Більше</string>
+    <string name="all_categories">Всі категорії</string>
+    <string name="more">Більше</string>
+
+    <!-- Game Sections -->
+    <string name="featured_games">Вибрані</string>
+    <string name="popular_games">Популярні</string>
+    <string name="new_games">Нові</string>
+    <string name="no_games_found">Ігор не знайдено</string>
+
+    <!-- App Details -->
+    <string name="app_icon">Іконка</string>
+    <string name="banner">Банер</string>
+    <string name="about">Про додаток</string>
+    <string name="about_this_app">Про додаток</string>
+    <string name="screenshots">Знімки екрану</string>
+    <string name="screenshot">Знімок екрану</string>
+    <string name="stars">Зірок</string>
+    <string name="forks">Форків</string>
+    <string name="language">Мова</string>
+    <string name="downloads">Завантажень</string>
+    <string name="hinglish">Hinglish</string>
+    <string name="search_language">Пошук мов…</string>
+    <string name="last_updated">Останньо оновленний</string>
+    <string name="updated_on">Оновленний</string>
+    <string name="latest_release">Останній реліз</string>
+    <string name="whats_new">Нове</string>
+    <string name="readme">README</string>
+    <string name="download">Завантажити</string>
+    <string name="install">Встановити</string>
+    <string name="download_apk">Завантажити APK</string>
+    <string name="view_release">Переглянути релізи</string>
+    <string name="view_on_github">Переглянути на GitHub</string>
+    <string name="github">GitHub</string>
+    <string name="no_description">Немає опису</string>
+    <string name="no_release_notes">Немає опису</string>
+    <string name="archived">Заархівовано</string>
+
+    <!-- Security badge (VirusTotal) -->
+    <string name="security_checking">Перевірка безпеки…</string>
+    <string name="security_verified">Безпечно</string>
+    <string name="security_verified_detail">Безпеку підтвердили · %1$d рушіїв</string>
+    <string name="security_flagged">Попереждення про безпеку</string>
+    <string name="security_flagged_detail">%1$d/%2$d рушіїв позначило цей файл</string>
+    <string name="security_integrity">Контрольну суму перевірено</string>
+    <string name="security_source">GitHub релізи</string>
+    <string name="security_unknown">GitHub релізи</string>
+    <string name="security_powered_by">VirusTotal безпеку підтвердив </string>
+    <string name="security_info_scan">Скановано за допомогою VirusTotal — загроз не знайдено.</string>
+    <string name="security_info_integrity">Цілісність можна перевірити за контрольної сумою SHA-256, опублікованою на GitHub.</string>
+    <string name="security_info_source">Встановлено безпосередньо з офіційного релізу розробника на GitHub.</string>
+    <string name="security_label">Безпека</string>
+    <string name="security_stat_checking">…</string>
+    <string name="security_stat_safe">Безпечно</string>
+    <string name="security_stat_verified">Перевірено</string>
+    <string name="security_stat_warning">Увага</string>
+    <string name="security_stat_source">GitHub</string>
+
+    <!-- Install unknown apps permission -->
+    <string name="install_permission_prompt">Дозвольте цьому додатку встановлювати додатки, тоді поверніться для продовження.</string>
+    <string name="install_permission_required">Дозвіл необхідний для встановлення додатку. Увімкніть його в налаштуваннях та спробуйте знову</string>
+
+    <!-- Tags -->
+    <string name="tag_new">НОВЕ</string>
+    <string name="tag_updated">ОНОВЛЕНЕ</string>
+    <string name="tag_archived">АРХІВОВАНЕ</string>
+
+    <!-- Error Messages -->
+    <string name="no_apps_found">Додатків не знайдено</string>
+    <string name="no_repos_found">Репозиторіїв не знайдено</string>
+    <string name="rate_limit_error">Ліміту швидкості досягнуто. Спробуйте потім знову.</string>
+    <string name="network_error">Помилка мережі. Перевірьте підключення до Інтернету</string>
+    <string name="tap_to_retry">Натисніть для оновлення</string>
+    <string name="loading">Загрузка…</string>
+
+    <!-- Developer -->
+    <string name="repositories">Репозиторії</string>
+    <string name="repositories_count">%d репозиторіїв</string>
+    <string name="view_github_profile">Подивитись GitHub профіль</string>
+
+    <!-- Settings -->
+    <string name="settings">Налаштування</string>
+    <string name="github_token">GitHub Personal Access Token</string>
+    <string name="github_token_desc">Add a token to increase API rate limit from 60 to 5000 requests per hour.</string>
+    <string name="enter_token">Enter your GitHub token</string>
+    <string name="save_token">Save Token</string>
+    <string name="clear_token">Clear Token</string>
+    <string name="create_token_on_github">Create Token on GitHub</string>
+    <string name="token_saved">Token saved successfully</string>
+    <string name="token_removed">Token removed</string>
+    <string name="rate_limit_info_title">API Rate Limit</string>
+    <string name="rate_limit_info_desc">Without a token: 60 requests/hour\nWith a token: 5,000 requests/hour</string>
+    <string name="how_to_create_token">How to create a token:</string>
+    <string name="token_instructions">1. Go to GitHub Settings → Developer settings\n2. Click \"Personal access tokens\" → \"Tokens (classic)\"\n3. Click \"Generate new token\"\n4. Give it a name and select \"public_repo\" scope\n5. Click \"Generate token\" and copy it</string>
+    <string name="no_token_set">No token set</string>
+    <string name="token_configured">Token configured</string>
+    
+    <!-- Developer Info -->
+    <string name="developer">Розробник</string>
+    <string name="followers">Підписники</string>
+    <string name="following">Підписан</string>
+    
+    <!-- Download & Install -->
+    <string name="downloading">Завантаження…</string>
+    <string name="downloading_apk">Завантаження APK</string>
+    <string name="download_complete">Завантаження завершено</string>
+    <string name="download_in_progress">Завантаження вже почате</string>
+    <string name="file_not_found">Завантажений файл не знайдено</string>
+    <string name="install_error">Could not open installer</string>
+    <string name="installing">Встановлення…</string>
+    <string name="open">Відкрити</string>
+    <string name="cannot_open_app">Неможливо відкрити додаток</string>
+    <string name="queued">Queued…</string>
+    <string name="preparing">Підготовка…</string>
+    <string name="verifying">Перевірка…</string>
+    <string name="storage_error">Storage error occurred</string>
+    <string name="insufficient_storage">Not enough storage space</string>
+    <string name="verification_failed">File verification failed</string>
+    <string name="download_timeout">Download timed out</string>
+    <string name="retry">Повторити</string>
+    <string name="cancel">Скасувати</string>
+    <string name="update">Оновити</string>
+    <string name="update_available">Доступне оновлення</string>
+    <string name="uninstall">Видалити</string>
+
+    <!-- App Updates screen -->
+    <string name="app_updates">App Updates</string>
+    <string name="available_updates">Available updates (%1$d)</string>
+    <string name="update_all">Update all</string>
+    <string name="checking_for_updates">Checking for updates…</string>
+    <string name="no_updates_available">You\'re all up to date</string>
+    <string name="no_updates_available_hint">Apps installed via RepoStore with available updates will appear here</string>
+    <string name="updates_check_failed">Couldn\'t check for updates</string>
+    <string name="updating_app">Updating %1$s…</string>
+
+    <!-- Update notifications -->
+    <string name="update_notification_channel_name">App Updates</string>
+    <string name="update_notification_channel_desc">Notifies when updates are available for your installed apps</string>
+    <string name="update_notification_title">Update available: %1$s</string>
+    <string name="update_notification_text">%1$s → %2$s. Tap to update.</string>
+    <string name="update_notification_summary_title">Updates available</string>
+    <string name="update_notification_summary_text">%1$d app updates available</string>
+    
+    <!-- GitHub Sign In -->
+    <string name="github_sign_in">Sign in with GitHub</string>
+    <string name="sign_in_to_increase_limit">Sign in to increase API rate limit</string>
+    <string name="connecting_to_github">Connecting to GitHub…</string>
+    <string name="enter_code_on_github">Enter this code on GitHub</string>
+    <string name="code_instructions">Open GitHub in your browser and enter the code below to sign in</string>
+    <string name="copy_code">Скопіювати код</string>
+    <string name="code_copied">Код скопійовано</string>
+    <string name="open_github">Відкрити GitHub</string>
+    <string name="waiting_for_authorization">Waiting for authorization…</string>
+    <string name="signed_in_successfully">Signed in successfully!</string>
+    <string name="signed_in">Signed in</string>
+    <string name="signed_in_as">Signed in as %s</string>
+    <string name="rate_limit_increased">API rate limit increased to 5,000 requests/hour</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signed_out">Signed out</string>
+    <string name="failed_to_get_code">Failed to get authorization code</string>
+    <string name="auth_expired">Authorization expired. Please try again.</string>
+    <string name="unknown_error">Unknown error occurred</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="user">\@user</string>
+    <string name="rate_limit_exceeded_title">Rate Limit Exceeded</string>
+    <string name="rate_limit_exceeded_message">You\'ve exceeded the GitHub API rate limit (60 requests/hour).\n\nSign in with GitHub to increase your limit to 5,000 requests/hour for free!</string>
+    <string name="rate_limit_exceeded_signed_in">You\'ve exceeded the authenticated rate limit (5,000 requests/hour). Please wait a few minutes before trying again.</string>
+    
+    <!-- Donate -->
+    <string name="donate">Донат</string>
+    <string name="support_developer">Підтримати розробника</string>
+    <string name="donate_description">If you find this app useful, consider supporting the development with a small donation.</string>
+    <string name="scan_qr_code">Scan QR Code to Pay</string>
+    <string name="upi_qr_code">UPI QR Code</string>
+    <string name="upi_id">UPI ID</string>
+    <string name="copy">Копіювати</string>
+    <string name="upi_id_copied">UPI ID copied to clipboard</string>
+    <string name="thank_you_message">Дякую за вашу підтримку! ❤️</string>
+    <string name="pay_with_upi_app">Pay with UPI App</string>
+    <string name="no_upi_apps_found">No UPI payment apps found on your device</string>
+    <string name="payment_app_icon">Payment app icon</string>
+    <string name="pay">Сплатити</string>
+    <string name="cannot_open_payment_app">Cannot open payment app</string>
+    <string name="buy_me_a_coffee">Buy Me A Coffee</string>
+    <string name="support_buy_me_a_coffee">Підтримайте мене на Buy Me A Coffee</string>
+    
+    <!-- Open Source Licenses -->
+    <string name="open_source_licenses">Open Source Licenses</string>
+    <string name="source_code">Source Code</string>
+
+    <!-- Telegram -->
+    <string name="join_telegram">Telegram</string>
+    <string name="join_telegram_subtitle">Заходьте в наш Telegram для новин!</string>
+    
+    <!-- Dynamic content format strings -->
+    <string name="download_progress">%1$s (%2$s/%3$s)</string>
+    <string name="download_starting">0%%</string>
+    <string name="page_indicator">%1$d / %2$d</string>
+    <string name="version_format">Версія %s</string>
+    <string name="username_format">\@%s</string>
+    <string name="error_with_retry">%1$s\n\n%2$s</string>
+    
+    <!-- My Apps -->
+    <string name="my_apps">Мої додатки</string>
+    <string name="no_favorite_apps">No favorite apps yet</string>
+    <string name="no_favorite_apps_hint">Tap the heart icon on any app to add it here</string>
+    <string name="add_to_favorites">Додати до улюблених</string>
+    <string name="remove_from_favorites">Видалити з улюблених</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="favorite_apps">Улюблені додатки</string>
+    <string name="export_to_json">Експортувати в JSON</string>
+    <string name="import_from_json">Імпортувати з JSON</string>
+    <string name="export_successful">Експорт успішний</string>
+    <string name="import_successful">Імпорт успіщний</string>
+    <string name="export_failed">Export failed</string>
+    <string name="import_failed">Import failed</string>
+    <string name="no_installed_apps">No installed apps</string>
+    <string name="no_installed_apps_hint">Apps you install from your favorites will appear here</string>
+    
+    <!-- Appearance -->
+    <string name="appearance">Вигляд</string>
+    <string name="theme_system">Система</string>
+    <string name="theme_for_you">Для тебе</string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_light">Світла</string>
+    
+    <!-- Download Settings -->
+    <string name="download_settings">Download Settings</string>
+    <string name="proxy">Проксі</string>
+    <string name="mirror_proxy_description">For countries or regions where GitHub is blocked, use a proxy to download.</string>
+    <string name="enable_mirror_proxy">Enable Mirror Proxy</string>
+    <string name="proxy_url_hint">Proxy URL (e.g., https://gh-proxy.com/)</string>
+    <string name="popular_proxies">Popular Proxies</string>
+    <string name="multi_part_download">Multi-Part Download</string>
+    <string name="multi_part_description">Download files using multiple connections for faster speeds.</string>
+    <string name="enable_multi_part">Enable Multi-Part Download</string>
+    <string name="download_threads">Download Threads</string>
+    <string name="thread_count_hint">Higher values may improve speed but use more resources (1–32)</string>
+    <string name="download_settings_info">Mirror proxy transforms GitHub URLs through a proxy server. Multipart downloading splits files into chunks for parallel downloading.</string>
+    <string name="download_speed_format">%s/s</string>
+    <string name="select_variant">Виберіть версію</string>
+    <string name="compatible">Compatible</string>
+    <string name="incompatible">Incompatible</string>
+    <string name="recommended">Рекомендовані</string>
+    <string name="app_mismatch_title">App Mismatch?</string>
+    <string name="app_mismatch_message">RepoStore matched this repository to an installed app: %1$s (%2$s).\n\nIf this is NOT the same app, you can choose to install the APK from this repository anyway.</string>
+    <string name="install_anyway">Install Anyway</string>
+    <string name="forget_mapping">Forget Mapping</string>
+    <string name="contributors">Contributors</string>
+    <string name="no_apk_variants_available">No APK variants available</string>
+    <string name="chip_ghproxy" translatable="false">gh-proxy.com</string>
+    <string name="chip_ghproxy_net" translatable="false">ghproxy.net</string>
+    <string name="chip_mirror_ghproxy" translatable="false">mirror.ghproxy.com</string>
+    <string name="default_thread_count" translatable="false">4</string>
+    <string name="selected_content_desc">Selected</string>
+    <!-- Categories -->
+    <string name="cat_name_all">Всі</string>
+    <string name="cat_name_ai_chat">ШІ чати</string>
+    <string name="cat_name_app_manager">Менеджери додатків</string>
+    <string name="cat_name_app_store_updater">Магазини додатків</string>
+    <string name="cat_name_battery">Акумулятор</string>
+    <string name="cat_name_bookmark">Закладки</string>
+    <string name="cat_name_browser">Браузер</string>
+    <string name="cat_name_calculator">Калькулятор</string>
+    <string name="cat_name_calendar_agenda">Календарі</string>
+    <string name="cat_name_clock">Годинники</string>
+    <string name="cat_name_cloud_storage">Хмарне зберігання</string>
+    <string name="cat_name_connectivity">Connectivity</string>
+    <string name="cat_name_contact">Контакти</string>
+    <string name="cat_name_development">Розробка</string>
+    <string name="cat_name_dns_hosts">DNS та хости</string>
+    <string name="cat_name_draw">Додатки для малювання</string>
+    <string name="cat_name_ebook_reader">Ebook Reader</string>
+    <string name="cat_name_email">Email</string>
+    <string name="cat_name_file_encryption">File Encryption &amp; Vault</string>
+    <string name="cat_name_file_transfer">Обмін файлами</string>
+    <string name="cat_name_firewall">Firewall</string>
+    <string name="cat_name_finance_manager">Фінанси</string>
+    <string name="cat_name_flashlight">Ліхтарик</string>
+    <string name="cat_name_forum">Форуми</string>
+    <string name="cat_name_gallery">Галерея</string>
+    <string name="cat_name_games">Ігри</string>
+    <string name="cat_name_graphics">Графіка</string>
+    <string name="cat_name_habit_tracker">Habit Tracker</string>
+    <string name="cat_name_icon_pack">Icon Pack</string>
+    <string name="cat_name_internet">Інтернет</string>
+    <string name="cat_name_inventory">Inventory</string>
+    <string name="cat_name_keyboard_ime">Keyboard &amp; IME</string>
+    <string name="cat_name_launcher">Лаунчери</string>
+    <string name="cat_name_local_media_player">Медіа плеєри</string>
+    <string name="cat_name_location_tracker">Location Tracker &amp; Sharer</string>
+    <string name="cat_name_messaging">Спілкування</string>
+    <string name="cat_name_money">Гроші</string>
+    <string name="cat_name_multimedia">Мультімедіа</string>
+    <string name="cat_name_music_audio">Музика</string>
+    <string name="cat_name_video_players">Відео</string>
+    <string name="cat_name_music_practice">Music Practice Tool</string>
+    <string name="cat_name_navigation">Навігація</string>
+    <string name="cat_name_network_analyzer">Network Analyzer</string>
+    <string name="cat_name_news">Новини</string>
+    <string name="cat_name_note">Нотатки</string>
+    <string name="cat_name_online_media_player">Online Media Player</string>
+    <string name="cat_name_pass_wallet">Pass Wallet</string>
+    <string name="cat_name_fa">Паролі та 2FA</string>
+    <string name="cat_name_phone_sms">Телефон та СМС</string>
+    <string name="cat_name_podcast">Подкасти</string>
+    <string name="cat_name_public_transport">Public Transport</string>
+    <string name="cat_name_radio">Радіо</string>
+    <string name="cat_name_reading">Читання</string>
+    <string name="cat_name_recipe_manager">Recipe Manager</string>
+    <string name="cat_name_remote_controller">Remote Controller</string>
+    <string name="cat_name_science_education">Science &amp; Education</string>
+    <string name="cat_name_security">Безпека</string>
+    <string name="cat_name_shopping_list">Shopping List</string>
+    <string name="cat_name_social_network">Соціальні мережі</string>
+    <string name="cat_name_sports_health">Sports &amp; Health</string>
+    <string name="cat_name_streaming_app">Streaming App</string>
+    <string name="cat_name_system">Система</string>
+    <string name="cat_name_task">Завдання</string>
+    <string name="cat_name_text_editor">Text Editor</string>
+    <string name="cat_name_theming">Theming</string>
+    <string name="cat_name_time">Час</string>
+    <string name="cat_name_tools">Інструменти</string>
+    <string name="cat_name_translation_dictionary">Переклад</string>
+    <string name="cat_name_unit_convertor">Unit Convertor</string>
+    <string name="cat_name_voice_video_chat">Voice &amp; Video Chat</string>
+    <string name="cat_name_vpn">VPN та проксі</string>
+    <string name="cat_name_wallet">Wallet</string>
+    <string name="cat_name_wallpaper">Шпалери</string>
+    <string name="cat_name_weather">Погода</string>
+    <string name="cat_name_workout">Спорт</string>
+    <string name="cat_name_writing">Writing</string>
+    <string name="cat_name_productivity">Продуктивність</string>
+    <string name="cat_name_open_source">Open Source</string>
+    <string name="cat_name_trending">Трендові</string>
+</resources>
