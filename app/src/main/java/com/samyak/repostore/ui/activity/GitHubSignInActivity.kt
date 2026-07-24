@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.samyak.repostore.R
 import com.samyak.repostore.data.auth.GitHubAuth
 import com.samyak.repostore.databinding.ActivityGithubSignInBinding
@@ -166,13 +167,32 @@ class GitHubSignInActivity : AppCompatActivity() {
         binding.layoutSignedIn.visibility = View.VISIBLE
         binding.layoutError.visibility = View.GONE
 
+        binding.tvUserInfo.text = getString(R.string.rate_limit_increased)
+
         val user = GitHubAuth.getUser(this)
         if (user != null) {
-            binding.tvUsername.text = user.login
-            binding.tvUserInfo.text = getString(R.string.rate_limit_increased)
+            // Show the full display name when available, falling back to the login handle.
+            val displayName = user.name?.takeIf { it.isNotBlank() } ?: user.login
+            binding.tvDisplayName.text = displayName
+            binding.tvDisplayName.visibility = View.VISIBLE
+
+            // Always show the @handle beneath the name.
+            binding.tvUsername.text = getString(R.string.user_handle, user.login)
+            binding.tvUsername.visibility = View.VISIBLE
+
+            // Load the profile avatar (circular), with the account icon as placeholder.
+            Glide.with(this)
+                .load(user.avatarUrl)
+                .circleCrop()
+                .placeholder(R.drawable.ic_account)
+                .error(R.drawable.ic_account)
+                .into(binding.ivAvatar)
         } else {
-            binding.tvUsername.text = getString(R.string.signed_in)
-            binding.tvUserInfo.text = getString(R.string.rate_limit_increased)
+            // Signed in but profile details unavailable.
+            binding.tvDisplayName.text = getString(R.string.signed_in)
+            binding.tvDisplayName.visibility = View.VISIBLE
+            binding.tvUsername.visibility = View.GONE
+            binding.ivAvatar.setImageResource(R.drawable.ic_account)
         }
     }
 

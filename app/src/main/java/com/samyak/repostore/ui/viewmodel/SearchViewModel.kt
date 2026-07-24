@@ -126,6 +126,9 @@ class SearchViewModel(private val repository: GitHubRepository) : ViewModel() {
     }
 
     private fun performSearch(query: String, filters: SearchFilters, page: Int) {
+        // Cancel any in-flight search so rapid filter/query changes can't race, with a
+        // stale request finishing last and overwriting the newest results.
+        searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500) // Debounce
 

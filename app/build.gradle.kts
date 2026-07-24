@@ -78,6 +78,14 @@ android {
         includeInApk = false
         includeInBundle = false
     }
+
+    testOptions {
+        unitTests {
+            // Return default values for un-mocked android.* stubs (e.g. android.util.Log)
+            // so pure-JVM unit tests don't crash on framework logging calls.
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 kotlin {
@@ -142,6 +150,9 @@ dependencies {
 
     // WorkManager - background update checks
     implementation(libs.work.runtime.ktx)
+
+    // ZXing - QR code generation for the donate screen
+    implementation(libs.zxing.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

@@ -86,10 +86,17 @@ class DeveloperViewModel(
 
             result.fold(
                 onSuccess = { apps ->
-                    loadedApps.addAll(apps)
+                    // De-duplicate against already-loaded repos so overlapping pages
+                    // don't create duplicate list entries (which break DiffUtil).
+                    val existingIds = loadedApps.map { it.repo.id }.toHashSet()
+                    val newApps = apps.filter { existingIds.add(it.repo.id) }
+                    loadedApps.addAll(newApps)
                     _uiState.value = DeveloperUiState.Success(loadedApps.toList())
                 },
                 onFailure = {
+                    // Revert the page increment so a failed page can be retried instead
+                    // of being permanently skipped on the next loadMore.
+                    currentPage--
                     _uiState.value = DeveloperUiState.Success(loadedApps.toList())
                 }
             )

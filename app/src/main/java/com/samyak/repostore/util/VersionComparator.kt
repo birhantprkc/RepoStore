@@ -14,21 +14,22 @@ object VersionComparator {
      * @return true if latestVersion is newer than installedVersion
      */
     fun isNewerVersion(installedVersion: String, latestVersion: String): Boolean {
-        val normalizedInstalled = normalizeVersion(installedVersion)
-        val normalizedLatest = normalizeVersion(latestVersion)
+        val installedCore = normalizeVersion(installedVersion)
+        val latestCore = normalizeVersion(latestVersion)
         
-        if (normalizedInstalled.isEmpty() || normalizedLatest.isEmpty()) {
+        if (installedCore.isEmpty() || latestCore.isEmpty()) {
             return false
         }
         
-        val installedParts = normalizedInstalled.split(".")
-        val latestParts = normalizedLatest.split(".")
-        
+        // 1. Compare the numeric core (major.minor.patch...) using Long to tolerate
+        //    large build numbers that would overflow Int.
+        val installedParts = installedCore.split(".")
+        val latestParts = latestCore.split(".")
         val maxLength = maxOf(installedParts.size, latestParts.size)
         
         for (i in 0 until maxLength) {
-            val installedPart = installedParts.getOrNull(i)?.toIntOrNull() ?: 0
-            val latestPart = latestParts.getOrNull(i)?.toIntOrNull() ?: 0
+            val installedPart = installedParts.getOrNull(i)?.toLongOrNull() ?: 0L
+            val latestPart = latestParts.getOrNull(i)?.toLongOrNull() ?: 0L
             
             when {
                 latestPart > installedPart -> return true
@@ -36,7 +37,59 @@ object VersionComparator {
             }
         }
         
-        return false // Versions are equal
+        // 2. Numeric cores are equal — fall back to pre-release ordering.
+        //    A stable release (no pre-release tag) outranks any pre-release of the
+        //    same core (e.g. 1.0.0 is newer than 1.0.0-rc1).
+        val installedPre = extractPreRelease(installedVersion)
+        val latestPre = extractPreRelease(latestVersion)
+        
+        return when {
+            installedPre.isEmpty() && latestPre.isEmpty() -> false // truly equal
+            installedPre.isNotEmpty() && latestPre.isEmpty() -> true  // stable > pre-release
+            installedPre.isEmpty() && latestPre.isNotEmpty() -> false // pre-release < stable
+            else -> comparePreRelease(latestPre, installedPre) > 0
+        }
+    }
+    
+    /**
+     * Extract the pre-release identifier (the part after the first '-' or '_' in the
+     * core-stripped version), e.g. "v1.2.3-rc2" -> "rc2". Returns "" when absent.
+     */
+    private fun extractPreRelease(version: String): String {
+        var normalized = version.trim()
+        val prefixes = listOf("v", "V", "version", "Version", "release-", "Release-", "ver", "Ver")
+        for (prefix in prefixes) {
+            if (normalized.startsWith(prefix)) {
+                normalized = normalized.removePrefix(prefix)
+                break
+            }
+        }
+        val sepIndex = normalized.indexOfFirst { it == '-' || it == '_' }
+        if (sepIndex < 0) return ""
+        return normalized.substring(sepIndex + 1).lowercase().trim()
+    }
+    
+    /**
+     * Compare two non-empty pre-release strings. Splits on common separators and
+     * compares segment by segment: numeric segments compare numerically, others
+     * lexically. Returns >0 if [a] is newer, <0 if older, 0 if equal.
+     */
+    private fun comparePreRelease(a: String, b: String): Int {
+        val aParts = a.split('.', '-', '_').filter { it.isNotEmpty() }
+        val bParts = b.split('.', '-', '_').filter { it.isNotEmpty() }
+        val max = maxOf(aParts.size, bParts.size)
+        for (i in 0 until max) {
+            val ap = aParts.getOrNull(i) ?: return -1 // shorter pre-release is older
+            val bp = bParts.getOrNull(i) ?: return 1
+            val an = ap.toLongOrNull()
+            val bn = bp.toLongOrNull()
+            val cmp = when {
+                an != null && bn != null -> an.compareTo(bn)
+                else -> ap.compareTo(bp)
+            }
+            if (cmp != 0) return cmp
+        }
+        return 0
     }
     
     /**
