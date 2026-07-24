@@ -223,6 +223,10 @@ RepoStore is free and always will be. If it's helped you, consider:
 
 Your support helps maintain the app and build new features!
 
+<div align="center">
+  <img src="screenshots/support/support.jpeg" width="320" alt="Support RepoStore via UPI"/>
+</div>
+
 ---
 
 ## 🔑 Configuration

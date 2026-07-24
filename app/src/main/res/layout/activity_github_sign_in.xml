@@ -160,27 +160,54 @@
             android:padding="24dp"
             android:visibility="gone">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_check_circle"
-                app:tint="@color/green_500" />
+            <!-- Profile avatar with a success badge -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:contentDescription="@string/signed_in"
+                    android:src="@drawable/ic_account" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/green_500" />
+
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/signed_in_successfully"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
 
+            <!-- Full display name (e.g. "Dr Files") -->
+            <TextView
+                android:id="@+id/tv_display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textStyle="bold"
+                tools:text="Dr Files" />
+
+            <!-- Handle (e.g. "@DrFiles") -->
             <TextView
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimary"
-                tools:text="@string/user" />
+                tools:text="\@DrFiles" />
 
             <TextView
                 android:id="@+id/tv_user_info"

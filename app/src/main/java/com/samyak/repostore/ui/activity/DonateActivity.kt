@@ -19,6 +19,7 @@ import com.samyak.repostore.R
 import com.samyak.repostore.databinding.ActivityDonateBinding
 import com.samyak.repostore.ui.adapter.PaymentAppAdapter
 import com.samyak.repostore.ui.adapter.PaymentAppInfo
+import com.samyak.repostore.util.QrCodeGenerator
 
 class DonateActivity : AppCompatActivity() {
 
@@ -50,7 +51,14 @@ class DonateActivity : AppCompatActivity() {
 
     private fun setupViews() {
         binding.tvUpiId.text = UPI_ID
-        binding.ivQrCode.setImageResource(R.drawable.donate_qr_code)
+
+        // Generate the QR from the UPI URI at runtime so it always matches UPI_ID.
+        val qr = QrCodeGenerator.generate(buildUpiUri())
+        if (qr != null) {
+            binding.ivQrCode.setImageBitmap(qr)
+        } else {
+            binding.ivQrCode.setImageResource(R.drawable.ic_account)
+        }
 
         binding.btnCopyUpi.setOnClickListener {
             copyToClipboard(UPI_ID)
@@ -136,8 +144,7 @@ class DonateActivity : AppCompatActivity() {
     }
 
     companion object {
-        // TODO: Replace with your actual UPI ID
-        private const val UPI_ID = "samyakkamble@fifederal"
+        private const val UPI_ID = "samyakkamble01430-4@oksbi"
         private const val PAYEE_NAME = "Samyak"
 
         fun newIntent(context: Context): Intent {

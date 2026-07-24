@@ -196,6 +196,7 @@
     <string name="signed_in_successfully">Signed in successfully!</string>
     <string name="signed_in">Signed in</string>
     <string name="signed_in_as">Signed in as %s</string>
+    <string name="user_handle">\@%s</string>
     <string name="rate_limit_increased">API rate limit increased to 5,000 requests/hour</string>
     <string name="sign_out">Sign Out</string>
     <string name="signed_out">Signed out</string>

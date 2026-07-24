@@ -76,7 +76,9 @@ class AppInstaller private constructor(private val context: Context) {
     
     private val downloadScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    private val mainHandler = Handler(Looper.getMainLooper())
+    // Lazy so constructing AppInstaller doesn't touch the Android main Looper eagerly
+    // (which would throw in plain JVM unit tests). Created on first actual use.
+    private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
     
     private var currentDownloadId: Long = -1
     private var currentRepoName: String? = null
@@ -851,8 +853,11 @@ class AppInstaller private constructor(private val context: Context) {
 
         // 3. Label exact/substring match boost
         var labelBoost = 0.0
-        val cleanLabel = label.lowercase().replace(" ", "")
-        val cleanRepo = rawRepoName.lowercase().replace(" ", "")
+        // Normalize both sides identically (strip ALL non-alphanumerics, not just
+        // spaces) so e.g. label "Simple Gallery" and repo "Simple-Gallery" both
+        // reduce to "simplegallery" and the exact-match boost isn't missed.
+        val cleanLabel = label.lowercase().replace(Regex("[^a-z0-9]"), "")
+        val cleanRepo = rawRepoName.lowercase().replace(Regex("[^a-z0-9]"), "")
         if (cleanLabel == cleanRepo) {
             labelBoost = 0.4
         } else if (cleanLabel.contains(cleanRepo) || cleanRepo.contains(cleanLabel)) {

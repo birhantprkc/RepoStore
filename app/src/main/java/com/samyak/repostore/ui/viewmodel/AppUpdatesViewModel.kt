@@ -83,8 +83,11 @@ class AppUpdatesViewModel(
                     val installedVersion = appInstaller.getInstalledVersion(packageName)
                         ?: return@async null
 
-                    val release = repository.getLatestRelease(mapping.ownerName, mapping.repoName)
-                        .getOrNull() ?: return@async null
+                    val release = repository.getLatestRelease(
+                        mapping.ownerName,
+                        mapping.repoName,
+                        forceRefresh = true
+                    ).getOrNull() ?: return@async null
 
                     if (release.draft) return@async null
                     val latestTag = release.tagName.takeIf { it.isNotBlank() } ?: return@async null

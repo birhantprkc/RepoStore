@@ -15,17 +15,23 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.ConcurrentHashMap
 
 class GitHubRepository(private val repoDao: RepoDao) {
 
     private val api = RetrofitClient.api
 
-    // In-memory cache
-    private val releaseCache = mutableMapOf<String, GitHubRelease?>()
-    private val totalDownloadsCache = mutableMapOf<String, Long>()
-    private val screenshotCache = mutableMapOf<String, List<String>>()
-    private val developerReposCache = mutableMapOf<String, Pair<Long, List<AppItem>>>()
-    private val apkReposCache = mutableMapOf<String, Boolean>() // Cache for repos with APK
+    // In-memory cache. These are read/written from many parallel IO coroutines
+    // (e.g. filterReposWithApk fans out with async{}), so they must be thread-safe.
+    // ConcurrentHashMap disallows null values, so repos that are known to have NO
+    // release (HTTP 404) are tracked in a separate concurrent set instead of a null entry.
+    private val releaseCache = ConcurrentHashMap<String, GitHubRelease>()
+    private val noReleaseRepos: MutableSet<String> =
+        java.util.Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
+    private val totalDownloadsCache = ConcurrentHashMap<String, Long>()
+    private val screenshotCache = ConcurrentHashMap<String, List<String>>()
+    private val developerReposCache = ConcurrentHashMap<String, Pair<Long, List<AppItem>>>()
+    private val apkReposCache = ConcurrentHashMap<String, Boolean>() // Cache for repos with APK
     
     private var lastFetchTime = 0L
     private val cacheValidityMs = 10 * 60 * 1000L // 10 minutes
@@ -493,20 +499,34 @@ class GitHubRepository(private val repoDao: RepoDao) {
         }
     }
 
-    suspend fun getLatestRelease(owner: String, repoName: String): Result<GitHubRelease> = withContext(Dispatchers.IO) {
+    suspend fun getLatestRelease(
+        owner: String,
+        repoName: String,
+        forceRefresh: Boolean = false
+    ): Result<GitHubRelease> = withContext(Dispatchers.IO) {
         try {
             val cacheKey = "$owner/$repoName"
 
-            releaseCache[cacheKey]?.let {
-                return@withContext Result.success(it)
+            // When forceRefresh is requested (e.g. the App Updates screen checking for
+            // new versions) we skip the in-memory cache and always hit the network so
+            // freshly published releases show up immediately.
+            if (!forceRefresh) {
+                releaseCache[cacheKey]?.let {
+                    return@withContext Result.success(it)
+                }
+                // Remembered as having no release — avoid re-hitting the network.
+                if (noReleaseRepos.contains(cacheKey)) {
+                    return@withContext Result.failure(NoSuchElementException("No release found for $cacheKey"))
+                }
             }
 
             val release = api.getLatestRelease(owner, repoName)
             releaseCache[cacheKey] = release
+            noReleaseRepos.remove(cacheKey)
             Result.success(release)
         } catch (e: HttpException) {
             if (e.code() == 404) {
-                releaseCache["$owner/$repoName"] = null
+                noReleaseRepos.add("$owner/$repoName")
             }
             handleHttpException(e)
         } catch (e: Exception) {
@@ -693,6 +713,7 @@ class GitHubRepository(private val repoDao: RepoDao) {
 
     fun clearCache() {
         releaseCache.clear()
+        noReleaseRepos.clear()
         screenshotCache.clear()
         developerReposCache.clear()
         apkReposCache.clear()
