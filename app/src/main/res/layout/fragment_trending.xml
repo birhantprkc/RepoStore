@@ -14,15 +14,18 @@
         android:background="?attr/colorSurface"
         app:elevation="0dp">
 
+        <!-- Screen title sized like a Play Store top bar rather than a
+             28sp headline, so it lines up with the other tabs. -->
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/trending"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            android:textColor="?attr/colorOnSurface"
+            android:gravity="center_vertical"
+            android:minHeight="56dp"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp" />
+            android:text="@string/trending"
+            android:textAppearance="@style/TextAppearance.RepoStore.Toolbar.Title"
+            android:textColor="?attr/colorOnSurface" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,10 +39,10 @@
             android:id="@+id/rv_trending"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="8dp"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_featured_app" />
+            android:paddingVertical="8dp"
+            android:scrollbars="none"
+            tools:listitem="@layout/item_trending_app" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

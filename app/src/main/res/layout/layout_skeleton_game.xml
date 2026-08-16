@@ -103,11 +103,8 @@
 
                         <include layout="@layout/skeleton_app_item" />
                         <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
 
-                    </LinearLayout>
+</LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
 
@@ -157,11 +154,8 @@
 
                         <include layout="@layout/skeleton_app_item" />
                         <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
-                        <include layout="@layout/skeleton_app_item" />
 
-                    </LinearLayout>
+</LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
 

@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -24,6 +23,7 @@ import com.samyak.repostore.databinding.SectionAppCarouselBinding
 import com.samyak.repostore.databinding.SectionAppListBinding
 import com.samyak.repostore.ui.activity.AppListActivity
 import com.samyak.repostore.ui.activity.DetailActivity
+import com.samyak.repostore.ui.adapter.AppShelf
 import com.samyak.repostore.ui.adapter.FeaturedAppAdapter
 import com.samyak.repostore.ui.adapter.PlayStoreAppAdapter
 import com.samyak.repostore.ui.viewmodel.GameUiState
@@ -119,20 +119,22 @@ class GameFragment : Fragment() {
     }
 
     private fun setupGameSections() {
-        popularAdapter = PlayStoreAppAdapter { appItem ->
+        // Games read better as artwork, so the popular shelf uses tiles while
+        // the "new" shelf uses the three-row list for scannable detail.
+        popularAdapter = PlayStoreAppAdapter(POPULAR_SHELF_STYLE) { appItem ->
             navigateToDetail(appItem)
         }
         sectionPopular.rvApps.apply {
             adapter = popularAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            AppShelf.setup(this, POPULAR_SHELF_STYLE)
         }
 
-        newAdapter = PlayStoreAppAdapter { appItem ->
+        newAdapter = PlayStoreAppAdapter(NEW_SHELF_STYLE) { appItem ->
             navigateToDetail(appItem)
         }
         sectionNew.rvApps.apply {
             adapter = newAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            AppShelf.setup(this, NEW_SHELF_STYLE)
         }
     }
 
@@ -266,15 +268,21 @@ class GameFragment : Fragment() {
 
         // Popular: mix of top games (may overlap with featured for small sets)
         val popular = if (games.size > 5) {
-            sortedByStars.drop(3).take(10)  // Skip first 3 to reduce overlap
+            sortedByStars.drop(3)  // Skip first 3 to reduce overlap
         } else {
-            sortedByStars.take(10)  // Show all if we have few games
+            sortedByStars  // Show all if we have few games
         }
-        popularAdapter.submitList(popular.ifEmpty { sortedByStars.take(10) })
+        // Row shelves are trimmed to whole columns of three so they never end on
+        // a ragged, half-filled column.
+        popularAdapter.submitList(
+            AppShelf.trimToShelf(popular.ifEmpty { sortedByStars }, POPULAR_SHELF_STYLE)
+        )
 
         // New: sorted by creation/update date
-        val newGames = games.sortedByDescending { it.repo.updatedAt }.take(10)
-        newAdapter.submitList(newGames.ifEmpty { sortedByStars.take(10) })
+        val newGames = games.sortedByDescending { it.repo.updatedAt }
+        newAdapter.submitList(
+            AppShelf.trimToShelf(newGames.ifEmpty { sortedByStars }, NEW_SHELF_STYLE)
+        )
     }
 
     private fun navigateToDetail(appItem: AppItem) {
@@ -293,6 +301,9 @@ class GameFragment : Fragment() {
     }
 
     companion object {
+        private val POPULAR_SHELF_STYLE = AppShelf.Style.TILES
+        private val NEW_SHELF_STYLE = AppShelf.Style.ROWS
+
         fun newInstance() = GameFragment()
     }
 }

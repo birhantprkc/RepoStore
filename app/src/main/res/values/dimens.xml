@@ -2,4 +2,16 @@
 <resources>
     <dimen name="theme_card_stroke_width">2dp</dimen>
     <dimen name="selected_stroke_width">2dp</dimen>
+
+    <!-- Play Store shelf geometry. A row shelf stacks AppShelf.ROW_COUNT (3)
+         rows vertically and scrolls horizontally; a horizontal
+         GridLayoutManager divides its measured height by the span count, so the
+         shelf needs a defined height rather than wrap_content. The row height
+         leaves headroom above the 56dp icon for the three text lines (name,
+         category, rating + size) at larger font scales. -->
+    <dimen name="shelf_row_height">80dp</dimen>
+    <dimen name="shelf_height">240dp</dimen>
+
+    <!-- Tile shelf: a single row of tiles with 96dp artwork. -->
+    <dimen name="shelf_tile_height">176dp</dimen>
 </resources>

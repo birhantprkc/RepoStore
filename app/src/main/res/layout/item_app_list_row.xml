@@ -27,8 +27,11 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginStart="12dp"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCornerImage"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.AppIcon"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:strokeWidth="0.5dp"
         tools:src="@drawable/ic_app_placeholder" />
 
     <LinearLayout
@@ -104,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:visibility="gone"
         app:chipMinHeight="24dp"
         tools:text="NEW"

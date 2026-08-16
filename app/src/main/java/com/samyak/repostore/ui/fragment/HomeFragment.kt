@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.samyak.repostore.ui.widget.ShimmerFrameLayout
@@ -25,6 +24,7 @@ import com.samyak.repostore.databinding.SectionAppListBinding
 import com.samyak.repostore.ui.activity.AppListActivity
 import com.samyak.repostore.ui.activity.CategoriesActivity
 import com.samyak.repostore.ui.activity.DetailActivity
+import com.samyak.repostore.ui.adapter.AppShelf
 import com.samyak.repostore.ui.adapter.FeaturedAppAdapter
 import com.samyak.repostore.ui.adapter.PlayStoreAppAdapter
 import com.samyak.repostore.ui.viewmodel.HomeUiState
@@ -49,6 +49,10 @@ class HomeFragment : Fragment() {
 
     // Dynamic category sections: category -> (section view, binding, adapter)
     private val categorySections = mutableMapOf<AppCategory, Triple<View, SectionAppListBinding, PlayStoreAppAdapter>>()
+
+    // Shelf style per category, so the page alternates between three-row lists
+    // and artwork tiles the way the Play Store home page does.
+    private val categoryShelfStyles = mutableMapOf<AppCategory, AppShelf.Style>()
 
     // Shimmer layout for skeleton loading
     private var shimmerLayout: ShimmerFrameLayout? = null
@@ -213,7 +217,13 @@ class HomeFragment : Fragment() {
         val displayCategories = viewModel.displayCategories
         val density = resources.displayMetrics.density
 
-        displayCategories.forEach { category ->
+        displayCategories.forEachIndexed { index, category ->
+            // Every other shelf is a tile strip, mirroring how the Play Store
+            // breaks up its stacked row lists with artwork rows.
+            val shelfStyle =
+                if (index % 2 == 0) AppShelf.Style.ROWS else AppShelf.Style.TILES
+            categoryShelfStyles[category] = shelfStyle
+
             val sectionView = layoutInflater.inflate(
                 R.layout.section_app_list,
                 contentLayout,
@@ -230,16 +240,12 @@ class HomeFragment : Fragment() {
             val sectionBinding = SectionAppListBinding.bind(sectionView)
             sectionBinding.tvSectionTitle.text = getString(category.titleRes)
 
-            val adapter = PlayStoreAppAdapter { appItem ->
+            val adapter = PlayStoreAppAdapter(shelfStyle) { appItem ->
                 navigateToDetail(appItem)
             }
             sectionBinding.rvApps.apply {
                 this.adapter = adapter
-                layoutManager = LinearLayoutManager(
-                    requireContext(),
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
+                AppShelf.setup(this, shelfStyle)
             }
 
             // Hide until data is loaded
@@ -388,7 +394,9 @@ class HomeFragment : Fragment() {
         categoryAppsMap.forEach { (category, apps) ->
             categorySections[category]?.let { (sectionView, _, adapter) ->
                 if (apps.isNotEmpty()) {
-                    adapter.submitList(apps.take(10))
+                    // Whole columns only, so a row shelf never trails a stub column.
+                    val style = categoryShelfStyles[category] ?: AppShelf.Style.ROWS
+                    adapter.submitList(AppShelf.trimToShelf(apps, style))
                     sectionView.visibility = View.VISIBLE
                 }
             }

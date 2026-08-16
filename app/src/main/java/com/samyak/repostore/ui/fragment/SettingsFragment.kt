@@ -1,5 +1,6 @@
 package com.samyak.repostore.ui.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -54,6 +56,7 @@ class SettingsFragment : Fragment() {
         setupDeveloperSection()
         setupDonateSection()
         setupTelegramSection()
+        setupLinkedInSection()
         setupLicensesSection()
         setupSourceCodeSection()
     }
@@ -242,6 +245,24 @@ class SettingsFragment : Fragment() {
                 startActivity(intent)
             } catch (e: Exception) {
                 // Handle error silently
+            }
+        }
+    }
+
+    private fun setupLinkedInSection() {
+        binding.linkedinCard.setOnClickListener {
+            try {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(getString(R.string.linkedin_url))
+                )
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.cannot_open_app,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

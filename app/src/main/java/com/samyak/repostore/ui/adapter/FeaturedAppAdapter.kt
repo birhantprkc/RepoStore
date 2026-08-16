@@ -1,7 +1,6 @@
 package com.samyak.repostore.ui.adapter
 
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +23,6 @@ import java.util.Locale
 class FeaturedAppAdapter(
     private val onItemClick: (AppItem) -> Unit
 ) : ListAdapter<AppItem, FeaturedAppAdapter.FeaturedViewHolder>(AppDiffCallback()) {
-
-    private val gradientColors = listOf(
-        intArrayOf(0xFF667eea.toInt(), 0xFF764ba2.toInt()),
-        intArrayOf(0xFF11998e.toInt(), 0xFF38ef7d.toInt()),
-        intArrayOf(0xFFfc4a1a.toInt(), 0xFFf7b733.toInt()),
-        intArrayOf(0xFF4568DC.toInt(), 0xFFB06AB3.toInt()),
-        intArrayOf(0xFF0052D4.toInt(), 0xFF6FB1FC.toInt()),
-        intArrayOf(0xFFee0979.toInt(), 0xFFff6a00.toInt())
-    )
 
     // Screenshot folder names to check for banner
     private val screenshotFolders = listOf(
@@ -72,15 +62,13 @@ class FeaturedAppAdapter(
             val repoName = repo.name
             val branch = repo.defaultBranch ?: "main"
 
-            // Set gradient background as fallback
-            val colors = gradientColors[position % gradientColors.size]
-            val gradient = GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                colors
-            )
-            gradient.cornerRadius = 0f
-            binding.gradientBg.background = gradient
+            // Coloured gradient plus circles tinted to the same hue, used until
+            // (or unless) a banner image loads for this repository.
+            val palette = CardGradient.forPosition(position)
+            binding.gradientBg.background = palette.gradient
             binding.gradientBg.visibility = View.VISIBLE
+            binding.decorCircles.applyCircleTint(palette.circleTint)
+            binding.decorCircles.visibility = View.VISIBLE
             binding.ivBanner.visibility = View.GONE
 
             // Try to load banner from screenshots folder
@@ -176,6 +164,7 @@ class FeaturedAppAdapter(
                         // Banner loaded successfully, show it and hide gradient
                         binding.ivBanner.visibility = View.VISIBLE
                         binding.gradientBg.visibility = View.GONE
+                        binding.decorCircles.visibility = View.GONE
                         return false
                     }
                 })

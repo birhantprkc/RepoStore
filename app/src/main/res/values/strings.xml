@@ -234,6 +234,13 @@
     <!-- Telegram -->
     <string name="join_telegram">Join Telegram</string>
     <string name="join_telegram_subtitle">Join our channel for updates</string>
+
+    <!-- LinkedIn. Marked untranslatable: a personal name, a brand name and a
+         URL should read identically in every locale, and this also keeps them
+         out of the MissingTranslation report. -->
+    <string name="linkedin_name" translatable="false">Samyak Kamble</string>
+    <string name="linkedin" translatable="false">LinkedIn</string>
+    <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/samyak-kamble6659/</string>
     
     <!-- Dynamic content format strings -->
     <string name="download_progress">%1$s (%2$s/%3$s)</string>
@@ -291,6 +298,7 @@
     <string name="install_anyway">Install Anyway</string>
     <string name="forget_mapping">Forget Mapping</string>
     <string name="contributors">Contributors</string>
+    <string name="similar_apps">Similar apps</string>
     <string name="no_apk_variants_available">No APK variants available</string>
     <string name="chip_ghproxy" translatable="false">gh-proxy.com</string>
     <string name="chip_ghproxy_net" translatable="false">ghproxy.net</string>
@@ -314,7 +322,7 @@
     <string name="cat_name_development">Development</string>
     <string name="cat_name_dns_hosts">DNS &amp; Hosts</string>
     <string name="cat_name_draw">Draw</string>
-    <string name="cat_name_ebook_reader">Ebook Reader</string>
+    <string name="cat_name_ebook_reader">eBook Reader</string>
     <string name="cat_name_email">Email</string>
     <string name="cat_name_file_encryption">File Encryption &amp; Vault</string>
     <string name="cat_name_file_transfer">File Transfer</string>
@@ -332,7 +340,7 @@
     <string name="cat_name_keyboard_ime">Keyboard &amp; IME</string>
     <string name="cat_name_launcher">Launcher</string>
     <string name="cat_name_local_media_player">Local Media Player</string>
-    <string name="cat_name_location_tracker">Location Tracker &amp; Sharer</string>
+    <string name="cat_name_location_tracker">Location Tracker &amp; Sharing</string>
     <string name="cat_name_messaging">Messaging</string>
     <string name="cat_name_money">Money</string>
     <string name="cat_name_multimedia">Multimedia</string>
@@ -366,7 +374,7 @@
     <string name="cat_name_time">Time</string>
     <string name="cat_name_tools">Tools</string>
     <string name="cat_name_translation_dictionary">Translation &amp; Dictionary</string>
-    <string name="cat_name_unit_convertor">Unit Convertor</string>
+    <string name="cat_name_unit_convertor">Unit Converter</string>
     <string name="cat_name_voice_video_chat">Voice &amp; Video Chat</string>
     <string name="cat_name_vpn">VPN &amp; Proxy</string>
     <string name="cat_name_wallet">Wallet</string>
