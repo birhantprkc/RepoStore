@@ -30,6 +30,8 @@ import com.samyak.repostore.data.model.GitHubRepo
 import com.samyak.repostore.data.model.ReleaseAsset
 import com.samyak.repostore.databinding.ActivityDetailBinding
 import com.samyak.repostore.databinding.LayoutReleaseVariantPickerBinding
+import com.samyak.repostore.ui.adapter.AppShelf
+import com.samyak.repostore.ui.adapter.PlayStoreAppAdapter
 import com.samyak.repostore.ui.adapter.ReleaseVariantAdapter
 import com.samyak.repostore.ui.adapter.ScreenshotAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -74,6 +76,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private lateinit var screenshotAdapter: ScreenshotAdapter
+    private lateinit var similarAppsAdapter: PlayStoreAppAdapter
+
+    /** Repo id the similar-apps search has already been issued for. */
+    private var similarAppsRequestedFor: Long? = null
     private lateinit var appInstaller: AppInstaller
     private lateinit var favoriteAppDao: FavoriteAppDao
     
@@ -160,6 +166,8 @@ class DetailActivity : AppCompatActivity() {
         setupMarkwon()
         setupToolbar()
         setupScreenshotsRecyclerView()
+        setupExpandableSections()
+        setupSimilarAppsShelf()
         observeViewModel()
         viewModel.loadAppDetails(owner, repoName)
     }
@@ -194,6 +202,68 @@ class DetailActivity : AppCompatActivity() {
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
             finish()
+        }
+    }
+
+    /**
+     * Play Store collapses long body text and puts a chevron on each section
+     * heading. Tapping the heading expands that section and rotates the chevron
+     * a quarter turn to point down.
+     */
+    private fun setupExpandableSections() {
+        bindExpandableSection(
+            header = binding.headerAbout,
+            chevron = binding.ivAboutExpand,
+            body = binding.tvDescription,
+            collapsedMaxLines = ABOUT_COLLAPSED_LINES
+        )
+        bindExpandableSection(
+            header = binding.headerRelease,
+            chevron = binding.ivReleaseExpand,
+            body = binding.tvReleaseNotes,
+            collapsedMaxLines = RELEASE_NOTES_COLLAPSED_LINES
+        )
+        bindExpandableSection(
+            header = binding.headerReadme,
+            chevron = binding.ivReadmeExpand,
+            body = binding.tvReadme,
+            collapsedMaxLines = README_COLLAPSED_LINES
+        )
+    }
+
+    private fun bindExpandableSection(
+        header: View,
+        chevron: android.widget.ImageView,
+        body: android.widget.TextView,
+        collapsedMaxLines: Int
+    ) {
+        header.setOnClickListener {
+            val expanding = body.maxLines == collapsedMaxLines
+            body.maxLines = if (expanding) Int.MAX_VALUE else collapsedMaxLines
+            chevron.animate()
+                .rotation(if (expanding) 90f else 0f)
+                .setDuration(CHEVRON_ROTATION_MS)
+                .start()
+        }
+    }
+
+    /**
+     * The "Similar apps" shelf reuses the same horizontally scrolling tile shelf
+     * as the home and games tabs. There is no full list to open from here, so
+     * the section header's chevron is hidden.
+     */
+    private fun setupSimilarAppsShelf() {
+        similarAppsAdapter = PlayStoreAppAdapter(AppShelf.Style.TILES) { appItem ->
+            startActivity(
+                newIntent(this, appItem.repo.owner.login, appItem.repo.name)
+            )
+        }
+
+        binding.sectionSimilar.tvSectionTitle.text = getString(R.string.similar_apps)
+        binding.sectionSimilar.btnSeeMore.visibility = View.GONE
+        binding.sectionSimilar.rvApps.apply {
+            adapter = similarAppsAdapter
+            AppShelf.setup(this, AppShelf.Style.TILES)
         }
     }
 
@@ -242,6 +312,15 @@ class DetailActivity : AppCompatActivity() {
                 }
 
                 launch {
+                    viewModel.similarApps.collect { apps ->
+                        val visible = if (apps.isEmpty()) View.GONE else View.VISIBLE
+                        binding.sectionSimilar.root.visibility = visible
+                        binding.dividerSimilar.visibility = visible
+                        similarAppsAdapter.submitList(apps)
+                    }
+                }
+
+                launch {
                     viewModel.screenshots.collect { screenshots ->
                         if (screenshots.isNotEmpty()) {
                             currentScreenshots = screenshots
@@ -278,6 +357,15 @@ class DetailActivity : AppCompatActivity() {
                 binding.scrollContent.visibility = View.VISIBLE
                 binding.tvError.visibility = View.GONE
                 bindRepoData(state.repo, state.release)
+
+                // Success is emitted twice for one repo: once with the repo alone
+                // and again once the release resolves. Guarding on the repo id
+                // keeps the similar-apps search to a single request, which
+                // matters against the GitHub rate limit.
+                if (similarAppsRequestedFor != state.repo.id) {
+                    similarAppsRequestedFor = state.repo.id
+                    viewModel.loadSimilarApps(state.repo)
+                }
             }
             is DetailUiState.Error -> {
                 hideSkeleton()
@@ -959,6 +1047,14 @@ class DetailActivity : AppCompatActivity() {
         private const val TAG = "DetailActivity"
         private const val EXTRA_OWNER = "owner"
         private const val EXTRA_REPO = "repo"
+
+        // Collapsed line counts for the expandable sections. These must match the
+        // android:maxLines values in activity_detail.xml, which is what the
+        // expand toggle compares against to work out the current state.
+        private const val ABOUT_COLLAPSED_LINES = 4
+        private const val RELEASE_NOTES_COLLAPSED_LINES = 6
+        private const val README_COLLAPSED_LINES = 8
+        private const val CHEVRON_ROTATION_MS = 150L
 
         fun newIntent(context: Context, owner: String, repo: String): Intent {
             return Intent(context, DetailActivity::class.java).apply {

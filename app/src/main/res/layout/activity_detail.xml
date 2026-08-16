@@ -70,8 +70,10 @@
 
                     <TextView
                         android:id="@+id/tv_app_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
                         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                         tools:text="App Name" />
 
@@ -361,14 +363,16 @@
                             android:clickable="true"
                             android:focusable="true">
 
+                            <!-- Play Store gives Install the most weight on the
+                                 page; 16sp bold matches its prominence. -->
                             <TextView
                                 android:id="@+id/tv_download_action"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/install"
                                 android:textColor="?attr/colorOnPrimary"
-                                android:textStyle="bold"
-                                android:textSize="14sp" />
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_download_subtitle"
@@ -469,18 +473,44 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Play Store makes each section heading a tappable row with a
+                     trailing chevron; here it expands the collapsed body text. -->
+                <LinearLayout
+                    android:id="@+id/header_about"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/about_this_app"
-                    android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/about_this_app"
+                        android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
+
+                    <ImageView
+                        android:id="@+id/iv_about_expand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:ellipsize="end"
                     android:lineSpacingExtra="4dp"
+                    android:maxLines="4"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="App description goes here" />
@@ -519,11 +549,35 @@
 
             </LinearLayout>
 
-            <!-- Divider -->
+            <!-- Play Store separates sections with a hairline rule inset from
+                 the edges, not a thick banded block. -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?attr/colorSurfaceVariant" />
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="?attr/colorOutlineVariant" />
+
+            <!--
+              Similar apps shelf, matching the Play Store detail page. Reuses
+              section_app_list so it gets the same header and horizontally
+              scrolling shelf as the home and games tabs; DetailActivity
+              configures it as a tile shelf. Hidden until results arrive.
+            -->
+            <include
+                android:id="@+id/section_similar"
+                layout="@layout/section_app_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <!-- Divider -->
+            <View
+                android:id="@+id/divider_similar"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="?attr/colorOutlineVariant"
+                android:visibility="gone" />
 
             <!-- What's New Section -->
             <LinearLayout
@@ -535,8 +589,14 @@
                 android:visibility="gone">
 
                 <LinearLayout
+                    android:id="@+id/header_release"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -553,6 +613,15 @@
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         tools:text="v1.2.3" />
+
+                    <ImageView
+                        android:id="@+id/iv_release_expand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -579,6 +648,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:lineSpacingExtra="4dp"
+                    android:maxLines="6"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:textIsSelectable="true"
@@ -586,11 +656,13 @@
 
             </LinearLayout>
 
-            <!-- Divider -->
+            <!-- Play Store separates sections with a hairline rule inset from
+                 the edges, not a thick banded block. -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="?attr/colorSurfaceVariant" />
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="?attr/colorOutlineVariant" />
 
             <!-- README Section -->
             <LinearLayout
@@ -601,11 +673,33 @@
                 android:padding="16dp"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/header_readme"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/readme"
-                    android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/readme"
+                        android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
+
+                    <ImageView
+                        android:id="@+id/iv_readme_expand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_readme"
@@ -613,6 +707,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:lineSpacingExtra="4dp"
+                    android:maxLines="8"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:textIsSelectable="true" />
