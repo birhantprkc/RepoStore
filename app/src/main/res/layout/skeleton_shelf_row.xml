@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Skeleton placeholder for a single shelf row (item_app_playstore.xml). -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/shelf_row_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="8dp">
+
+    <!-- App icon skeleton, sized to match item_app_playstore.xml -->
+    <View
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/skeleton_rounded" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- App name skeleton -->
+        <View
+            android:layout_width="140dp"
+            android:layout_height="14dp"
+            android:background="@drawable/skeleton_rounded_small" />
+
+        <!-- Rating skeleton -->
+        <View
+            android:layout_width="48dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/skeleton_rounded_small" />
+
+    </LinearLayout>
+
+</LinearLayout>

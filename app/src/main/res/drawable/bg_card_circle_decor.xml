@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Three concentric decorative circles anchored to the right edge of a
+  featured/trending card. Sized and offset so all three share one centre, 32dp
+  in from the card's right edge, and each bleeds past that edge so the card's
+  rounded outline clips it into the nested arc look.
+
+  The fills are white and only their alpha matters: the adapter applies a
+  per-card SRC_IN background tint so the circles take on a pale wash of that
+  card's own gradient hue. SRC_IN keeps the destination alpha, so the 13% / 20%
+  / 28% layering below survives the tint.
+
+  Every item declares an explicit width and height with end gravity so the
+  shapes stay perfectly circular at any card size. Sizing them with left/right
+  insets instead turns them into ellipses that stretch with the card width.
+
+  android:width/height/gravity on a layer-list item require API 23; minSdk is 26.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outermost circle: largest, faintest, furthest off the edge -->
+    <item
+        android:width="240dp"
+        android:height="240dp"
+        android:gravity="center_vertical|end"
+        android:right="-88dp">
+        <shape android:shape="oval">
+            <solid android:color="#22FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Middle circle -->
+    <item
+        android:width="168dp"
+        android:height="168dp"
+        android:gravity="center_vertical|end"
+        android:right="-52dp">
+        <shape android:shape="oval">
+            <solid android:color="#33FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Innermost circle: smallest and most defined -->
+    <item
+        android:width="96dp"
+        android:height="96dp"
+        android:gravity="center_vertical|end"
+        android:right="-16dp">
+        <shape android:shape="oval">
+            <solid android:color="#47FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>

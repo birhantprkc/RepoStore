@@ -1,42 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Skeleton placeholder for app items matching item_app_playstore.xml dimensions -->
+<!--
+  One column of a shelf skeleton: three stacked rows matching
+  item_app_playstore.xml (56dp icon + name + rating).
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_width="300dp"
+    android:layout_height="@dimen/shelf_height"
+    android:orientation="vertical">
 
-    <!-- App icon skeleton -->
-    <View
-        android:layout_width="84dp"
-        android:layout_height="84dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/skeleton_rounded" />
+    <include layout="@layout/skeleton_shelf_row" />
 
-    <!-- App name skeleton -->
-    <View
-        android:layout_width="100dp"
-        android:layout_height="14dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/skeleton_rounded_small" />
+    <include layout="@layout/skeleton_shelf_row" />
 
-    <!-- Second line skeleton -->
-    <View
-        android:layout_width="60dp"
-        android:layout_height="10dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/skeleton_rounded_small" />
-
-    <!-- Rating skeleton -->
-    <View
-        android:layout_width="40dp"
-        android:layout_height="10dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/skeleton_rounded_small" />
+    <include layout="@layout/skeleton_shelf_row" />
 
 </LinearLayout>

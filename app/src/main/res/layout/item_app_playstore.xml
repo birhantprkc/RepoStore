@@ -1,61 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  A single row inside a Play Store category shelf. The shelf itself is a
+  horizontally scrolling grid three rows tall, so this item is a compact
+  horizontal row (icon + name + rating) rather than a tall tile. The width is
+  assigned at runtime by PlayStoreAppAdapter so the next column peeks in from
+  the right edge, which is how the Play Store hints that a shelf can scroll.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="120dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_app_icon"
-        android:layout_width="84dp"
-        android:layout_height="84dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCornerImage"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.AppIcon"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:strokeWidth="0.5dp"
         tools:src="@drawable/ic_app_placeholder" />
 
-    <TextView
-        android:id="@+id/tv_app_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="2"
-        android:minLines="2"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-        tools:text="App Name Here" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_rating"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_app_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="App Name Here" />
+
+        <!-- Play Store shows a category line here, e.g. "Finance • Stock". -->
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
             android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="12.5K" />
+            android:visibility="gone"
+            tools:text="Kotlin • productivity"
+            tools:visibility="visible" />
 
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginStart="2dp"
-            android:src="@drawable/ic_star"
-            android:contentDescription="@string/stars"
-            app:tint="?attr/colorOnSurfaceVariant" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="12.5K" />
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginStart="2dp"
+                android:contentDescription="@string/stars"
+                android:src="@drawable/ic_star"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <!-- APK download size, matching the "66 MB" Play Store shows. -->
+            <TextView
+                android:id="@+id/tv_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone"
+                tools:text="66 MB"
+                tools:visibility="visible" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

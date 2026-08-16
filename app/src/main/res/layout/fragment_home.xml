@@ -20,6 +20,9 @@
             android:layout_height="48dp"
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/search_apps_games"
+            android:focusable="true"
             app:cardBackgroundColor="?attr/colorSurfaceVariant"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
@@ -63,19 +66,14 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Category Tabs like Play Store -->
+        <!-- Category Tabs like Play Store. Styling lives in
+             Widget.RepoStore.TabLayout (short rounded indicator, sentence
+             case labels) so every tab strip in the app matches. -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_categories"
+            style="@style/Widget.RepoStore.TabLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:tabGravity="start"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="scrollable"
-            app:tabPaddingEnd="16dp"
-            app:tabPaddingStart="16dp"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextColor="?attr/colorOnSurfaceVariant" />
+            android:layout_height="48dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -33,16 +33,26 @@ class MainActivity : AppCompatActivity() {
 
         requestNotificationPermissionIfNeeded()
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
+        applyWindowInsets()
 
         setupBottomNavigation()
 
         if (savedInstanceState == null) {
             loadFragment(GameFragment.newInstance())
+        }
+    }
+
+    /**
+     * Edge-to-edge insets: the shell takes the status bar and the horizontal
+     * cutouts. The bottom inset is deliberately left unconsumed and passed
+     * through so BottomNavigationView can pad itself above the system
+     * navigation bar, which it does out of the box.
+     */
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            insets
         }
     }
 
@@ -87,6 +97,10 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        // Tapping the tab you are already on should not rebuild the fragment and
+        // throw away its scroll position, which is how the Play Store behaves.
+        binding.bottomNav.setOnItemReselectedListener { /* no-op */ }
     }
 
     private fun loadFragment(fragment: androidx.fragment.app.Fragment) {

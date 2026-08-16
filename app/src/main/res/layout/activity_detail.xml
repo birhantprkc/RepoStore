@@ -52,8 +52,11 @@
                         android:layout_width="72dp"
                         android:layout_height="72dp"
                         android:layout_gravity="center"
+                        android:contentDescription="@string/app_icon"
                         android:scaleType="centerCrop"
-                        app:shapeAppearanceOverlay="@style/RoundedCornerImage"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.AppIcon"
+                        app:strokeColor="?attr/colorOutlineVariant"
+                        app:strokeWidth="0.5dp"
                         tools:src="@drawable/ic_app_placeholder" />
 
                 </FrameLayout>
@@ -101,7 +104,9 @@
                     android:layout_height="40dp"
                     android:layout_gravity="top"
                     android:background="@drawable/bg_circle_grey"
+                    android:clickable="true"
                     android:contentDescription="@string/add_to_favorites"
+                    android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_favorite_border"
                     app:tint="?attr/colorOnSurface" />
@@ -435,7 +440,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:text="@string/screenshots"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_screenshots"
@@ -468,7 +473,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/about_this_app"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
 
                 <TextView
                     android:id="@+id/tv_description"
@@ -539,7 +544,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/whats_new"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                        android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
 
                     <TextView
                         android:id="@+id/tv_version"
@@ -600,7 +605,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/readme"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    android:textAppearance="@style/TextAppearance.RepoStore.SectionTitle" />
 
                 <TextView
                     android:id="@+id/tv_readme"

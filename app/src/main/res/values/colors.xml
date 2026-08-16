@@ -15,7 +15,14 @@
     <color name="primary">#01875F</color>
     <color name="primary_variant">#00695C</color>
     <color name="secondary">#01875F</color>
+    <!-- Lighter green used as the primary accent in dark mode -->
+    <color name="primary_dark_theme">#81C784</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Featured/trending card gradients and their circle tints are generated
+         per card across the full hue range by CardGradient, so they intentionally
+         have no colour resources here. -->
+
 
     <!-- Chip background -->
     <color name="chip_background">#E8F5E9</color>
